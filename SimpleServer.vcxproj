@@ -13,11 +13,21 @@
   </ImportGroup>
   <ItemGroup>
     <ClCompile Include="src\SimpleServer.cpp" />
+    <ClCompile Include="src\ssLib\ssCAcceptor.cpp" />
+    <ClCompile Include="src\ssLib\ssCBuffer.cpp" />
+    <ClCompile Include="src\ssLib\ssCService.cpp" />
+    <ClCompile Include="src\ssLib\ssCSession.cpp" />
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\ssLib\ssCAcceptor.hpp" />
+    <ClInclude Include="src\ssLib\ssCBuffer.hpp" />
+    <ClInclude Include="src\ssLib\ssCService.hpp" />
+    <ClInclude Include="src\ssLib\ssCSession.hpp" />
+    <ClInclude Include="src\ssLib\ssINonCopyable.hpp" />
+    <ClInclude Include="src\ssLib\ssLib.hpp" />
     <ClInclude Include="src\stdafx.hpp" />
   </ItemGroup>
   <ItemGroup>

@@ -5,6 +5,9 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;hpp</Extensions>
     </Filter>
+    <Filter Include="src\ssLib">
+      <UniqueIdentifier>{1ff79c24-acf5-4ea1-b00a-9b45ab4e331a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\SimpleServer.cpp">
@@ -13,10 +16,40 @@
     <ClCompile Include="src\stdafx.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\ssLib\ssCBuffer.cpp">
+      <Filter>src\ssLib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ssLib\ssCSession.cpp">
+      <Filter>src\ssLib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ssLib\ssCAcceptor.cpp">
+      <Filter>src\ssLib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ssLib\ssCService.cpp">
+      <Filter>src\ssLib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\stdafx.hpp">
       <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ssLib\ssLib.hpp">
+      <Filter>src\ssLib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ssLib\ssINonCopyable.hpp">
+      <Filter>src\ssLib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ssLib\ssCBuffer.hpp">
+      <Filter>src\ssLib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ssLib\ssCSession.hpp">
+      <Filter>src\ssLib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ssLib\ssCAcceptor.hpp">
+      <Filter>src\ssLib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ssLib\ssCService.hpp">
+      <Filter>src\ssLib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
