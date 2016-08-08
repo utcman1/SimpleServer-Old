@@ -2,11 +2,10 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="src">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;hpp</Extensions>
+      <UniqueIdentifier>{3f8215d3-d67e-465c-b6e8-806a16c517ae}</UniqueIdentifier>
     </Filter>
     <Filter Include="src\ssLib">
-      <UniqueIdentifier>{1ff79c24-acf5-4ea1-b00a-9b45ab4e331a}</UniqueIdentifier>
+      <UniqueIdentifier>{73b92b0b-ed84-4bdf-8b52-d3aaa03f0318}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 

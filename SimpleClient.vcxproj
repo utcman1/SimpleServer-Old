@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{980A879F-AA19-4DCB-B83A-20DF672FF59B}</ProjectGuid>
+    <ProjectGuid>{07DAB171-D77B-4DBE-952E-0A0F2F7FF28A}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>SimpleServer</RootNamespace>
+    <RootNamespace>SimpleClient</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
 
