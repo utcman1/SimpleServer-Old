@@ -14,7 +14,7 @@
   </ImportGroup>
 
   <ItemGroup>
-    <ClCompile Include="src\SimpleServer.cpp" />
+    <ClCompile Include="src\SimpleClient.cpp" />
     <ClCompile Include="src\ssLib\ssCAcceptor.cpp" />
     <ClCompile Include="src\ssLib\ssCBuffer.cpp" />
     <ClCompile Include="src\ssLib\ssCService.cpp" />

@@ -6,7 +6,7 @@
 int main()
 {
 	ssCService server;
-	server.accept(9999);
+	server.accept(BAEndpoint(BAAddr::from_string("127.0.0.1"), 9999));
 	server.run();
 
     return 0;

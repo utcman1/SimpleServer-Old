@@ -12,7 +12,7 @@ void ssCAcceptor::onCompleteAccept(const BErrorCode& _ec, ssCSession& _session)
 {
 	if (_ec)
 	{
-		onError(_ec);
+		this->onError(_ec);
 		m_server.freeSession(&_session);
 	}
 	else
@@ -24,8 +24,23 @@ void ssCAcceptor::onCompleteAccept(const BErrorCode& _ec, ssCSession& _session)
 
 
 ssCAcceptor::ssCAcceptor(ssCService& _server)
-	: BAAcceptor(_server.getIoService()), m_server(_server)
+	: BAAcceptor(_server), m_server(_server)
 {
+}
+
+bool ssCAcceptor::init(const BAEndpoint _ep)
+{
+	BAAcceptor::open(_ep.protocol());
+	BAAcceptor::bind(_ep);
+	BAAcceptor::listen();
+
+	return this->issueAccept();
+}
+
+void ssCAcceptor::release()
+{
+	BAAcceptor::cancel();
+	BAAcceptor::close();
 }
 
 bool ssCAcceptor::issueAccept()

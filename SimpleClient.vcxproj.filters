@@ -10,7 +10,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ClCompile Include="src\SimpleServer.cpp">
+    <ClCompile Include="src\SimpleClient.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="src\stdafx.cpp">

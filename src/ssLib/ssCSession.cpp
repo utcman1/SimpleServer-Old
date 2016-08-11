@@ -12,7 +12,7 @@ void ssCSession::onCompleteRecv(const BErrorCode& _ec, const std::size_t _len)
 {
 	if (_ec)
 	{
-		onError(_ec);
+		this->onError(_ec);
 	}
 	else
 	{
@@ -21,11 +21,11 @@ void ssCSession::onCompleteRecv(const BErrorCode& _ec, const std::size_t _len)
 		if (m_recvBuffer.isCompletePacket())
 		{
 			m_recvBuffer.moveTo(m_sendBuffer);
-			issueSend();
+			this->issueSend();
 		}
 		else
 		{
-			issueRecv();
+			this->issueRecv();
 		}
 	}
 }
@@ -34,7 +34,7 @@ void ssCSession::onCompleteSend(const BErrorCode& _ec, const std::size_t _len)
 {
 	if (_ec)
 	{
-		onError(_ec);
+		this->onError(_ec);
 	}
 	else
 	{
@@ -42,19 +42,42 @@ void ssCSession::onCompleteSend(const BErrorCode& _ec, const std::size_t _len)
 
 		if (m_sendBuffer.empty())
 		{
-			issueRecv();
+			this->issueRecv();
 		}
 		else
 		{
-			issueSend();
+			this->issueSend();
 		}
+	}
+}
+
+void ssCSession::onCompleteConnect(const BErrorCode& _ec)
+{
+	if (_ec)
+	{
+		this->onError(_ec);
+	}
+	else
+	{
+		// TODO : connect 성공하면 echo send를 시작한다. 이건 임시 구현이다.
+		m_sendBuffer.push(1);
+		this->issueSend();
 	}
 }
 
 
 
 ssCSession::ssCSession(ssCService& _server)
-	: BASocket(_server.getIoService()), m_server(_server)
+	: BASocket(_server), m_server(_server)
+{
+}
+
+bool ssCSession::init()
+{
+	return true;
+}
+
+void ssCSession::release()
 {
 }
 
@@ -73,5 +96,14 @@ void ssCSession::issueSend()
 		[this](const BErrorCode& _ec, std::size_t _len)
 		{
 			this->onCompleteSend(_ec, _len);
+		});
+}
+
+void ssCSession::issueConnect(const BAEndpoint _ep)
+{
+	BASocket::async_connect(_ep,
+		[this](const BErrorCode& _ec)
+		{
+			this->onCompleteConnect(_ec);
 		});
 }
