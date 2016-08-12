@@ -9,7 +9,6 @@
       <UniqueIdentifier>{1ff79c24-acf5-4ea1-b00a-9b45ab4e331a}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
-
   <ItemGroup>
     <ClCompile Include="src\SimpleServer.cpp">
       <Filter>src</Filter>
@@ -17,44 +16,42 @@
     <ClCompile Include="src\stdafx.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="src\ssLib\ssCBuffer.cpp">
+    <ClCompile Include="src\ssLib\ssBuffer.cpp">
       <Filter>src\ssLib</Filter>
     </ClCompile>
-    <ClCompile Include="src\ssLib\ssCSession.cpp">
+    <ClCompile Include="src\ssLib\ssSession.cpp">
       <Filter>src\ssLib</Filter>
     </ClCompile>
-    <ClCompile Include="src\ssLib\ssCAcceptor.cpp">
+    <ClCompile Include="src\ssLib\ssAcceptor.cpp">
       <Filter>src\ssLib</Filter>
     </ClCompile>
-    <ClCompile Include="src\ssLib\ssCService.cpp">
+    <ClCompile Include="src\ssLib\ssService.cpp">
       <Filter>src\ssLib</Filter>
     </ClCompile>
   </ItemGroup>
-
   <ItemGroup>
     <ClInclude Include="src\stdafx.hpp">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\ssLib\ssLib.hpp">
-      <Filter>src\ssLib</Filter>
-    </ClInclude>
     <ClInclude Include="src\ssLib\ssINonCopyable.hpp">
       <Filter>src\ssLib</Filter>
     </ClInclude>
-    <ClInclude Include="src\ssLib\ssCBuffer.hpp">
+    <ClInclude Include="src\ssLib\ssBuffer.hpp">
       <Filter>src\ssLib</Filter>
     </ClInclude>
-    <ClInclude Include="src\ssLib\ssCSession.hpp">
+    <ClInclude Include="src\ssLib\ssSession.hpp">
       <Filter>src\ssLib</Filter>
     </ClInclude>
-    <ClInclude Include="src\ssLib\ssCAcceptor.hpp">
+    <ClInclude Include="src\ssLib\ssAcceptor.hpp">
       <Filter>src\ssLib</Filter>
     </ClInclude>
-    <ClInclude Include="src\ssLib\ssCService.hpp">
+    <ClInclude Include="src\ssLib\ssService.hpp">
       <Filter>src\ssLib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ssLib.hpp">
+      <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
-
   <ItemGroup>
     <None Include=".gitignore" />
   </ItemGroup>

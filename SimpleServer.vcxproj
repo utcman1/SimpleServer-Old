@@ -6,38 +6,33 @@
     <RootNamespace>SimpleServer</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
-
   <Import Project="props\consoleBase.props" />
   <ImportGroup Label="PropertySheets">
     <Import Project="props\boost_1_61_0.props" />
     <Import Project="props\mysql-cluster-gpl-7.5.3.props" />
   </ImportGroup>
-
   <ItemGroup>
     <ClCompile Include="src\SimpleServer.cpp" />
-    <ClCompile Include="src\ssLib\ssCAcceptor.cpp" />
-    <ClCompile Include="src\ssLib\ssCBuffer.cpp" />
-    <ClCompile Include="src\ssLib\ssCService.cpp" />
-    <ClCompile Include="src\ssLib\ssCSession.cpp" />
+    <ClCompile Include="src\ssLib\ssAcceptor.cpp" />
+    <ClCompile Include="src\ssLib\ssBuffer.cpp" />
+    <ClCompile Include="src\ssLib\ssService.cpp" />
+    <ClCompile Include="src\ssLib\ssSession.cpp" />
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
   </ItemGroup>
-
   <ItemGroup>
-    <ClInclude Include="src\ssLib\ssCAcceptor.hpp" />
-    <ClInclude Include="src\ssLib\ssCBuffer.hpp" />
-    <ClInclude Include="src\ssLib\ssCService.hpp" />
-    <ClInclude Include="src\ssLib\ssCSession.hpp" />
+    <ClInclude Include="src\ssLib.hpp" />
+    <ClInclude Include="src\ssLib\ssAcceptor.hpp" />
+    <ClInclude Include="src\ssLib\ssBuffer.hpp" />
+    <ClInclude Include="src\ssLib\ssService.hpp" />
+    <ClInclude Include="src\ssLib\ssSession.hpp" />
     <ClInclude Include="src\ssLib\ssINonCopyable.hpp" />
-    <ClInclude Include="src\ssLib\ssLib.hpp" />
     <ClInclude Include="src\stdafx.hpp" />
   </ItemGroup>
-
   <ItemGroup>
     <None Include=".gitignore" />
   </ItemGroup>
-
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

@@ -1,14 +1,14 @@
 ﻿#include <stdafx.hpp>
-#include <ssLib/ssLib.hpp>
+#include <ssLib.hpp>
 
 
 
-void ssCSession::onError(const BErrorCode& _ec)
+void ssSession::onError(const bsErrorCode& _ec)
 {
 	std::cerr << _ec.message() << std::endl;
 }
 
-void ssCSession::onCompleteRecv(const BErrorCode& _ec, const std::size_t _len)
+void ssSession::onCompleteRecv(const bsErrorCode& _ec, const std::size_t _len)
 {
 	if (_ec)
 	{
@@ -30,7 +30,7 @@ void ssCSession::onCompleteRecv(const BErrorCode& _ec, const std::size_t _len)
 	}
 }
 
-void ssCSession::onCompleteSend(const BErrorCode& _ec, const std::size_t _len)
+void ssSession::onCompleteSend(const bsErrorCode& _ec, const std::size_t _len)
 {
 	if (_ec)
 	{
@@ -51,7 +51,7 @@ void ssCSession::onCompleteSend(const BErrorCode& _ec, const std::size_t _len)
 	}
 }
 
-void ssCSession::onCompleteConnect(const BErrorCode& _ec)
+void ssSession::onCompleteConnect(const bsErrorCode& _ec)
 {
 	if (_ec)
 	{
@@ -67,42 +67,42 @@ void ssCSession::onCompleteConnect(const BErrorCode& _ec)
 
 
 
-ssCSession::ssCSession(ssCService& _server)
-	: BASocket(_server), m_server(_server)
+ssSession::ssSession(ssService& _server)
+	: baSocket(_server), m_server(_server)
 {
 }
 
-bool ssCSession::init()
+bool ssSession::init()
 {
 	return true;
 }
 
-void ssCSession::release()
+void ssSession::release()
 {
 }
 
-void ssCSession::issueRecv()
+void ssSession::issueRecv()
 {
-	BASocket::async_read_some(m_recvBuffer.toMutableBuffer(),
-		[this](const BErrorCode& _ec, std::size_t _len)
+	baSocket::async_read_some(m_recvBuffer.toMutableBuffer(),
+		[this](const bsErrorCode& _ec, std::size_t _len)
 		{
 			this->onCompleteRecv(_ec, _len);
 		});
 }
 
-void ssCSession::issueSend()
+void ssSession::issueSend()
 {
-	BASocket::async_write_some(m_sendBuffer.toConstbuffer(),
-		[this](const BErrorCode& _ec, std::size_t _len)
+	baSocket::async_write_some(m_sendBuffer.toConstbuffer(),
+		[this](const bsErrorCode& _ec, std::size_t _len)
 		{
 			this->onCompleteSend(_ec, _len);
 		});
 }
 
-void ssCSession::issueConnect(const BAEndpoint _ep)
+void ssSession::issueConnect(const baEndpoint _ep)
 {
-	BASocket::async_connect(_ep,
-		[this](const BErrorCode& _ec)
+	baSocket::async_connect(_ep,
+		[this](const bsErrorCode& _ec)
 		{
 			this->onCompleteConnect(_ec);
 		});

@@ -1,12 +1,12 @@
 ﻿#include <stdafx.hpp>
-#include <ssLib/ssLib.hpp>
+#include <ssLib.hpp>
 
 
 
 int main()
 {
-	ssCService client;
-	client.connect(BAEndpoint(BAAddr::from_string("127.0.0.1"), 9999));
+	ssService client;
+	client.connect(baEndpoint(baAddr::from_string("127.0.0.1"), 9999));
 	client.run();
 
     return 0;

@@ -2,7 +2,7 @@
 
 
 
-class ssCBuffer
+class ssBuffer
 {
 private:
 	enum { EC_Capacity = 4096 - sizeof(size_t) };
@@ -10,7 +10,7 @@ private:
 	char m_buffer[EC_Capacity];
 
 private:
-	char* ssCBuffer::nextPtr();
+	char* ssBuffer::nextPtr();
 	void pushData(const char* _buffer, const std::size_t _len);
 
 public:
@@ -24,9 +24,9 @@ public:
 	void clear();
 	void pop(const std::size_t _len);
 	void push(const std::size_t _len);
-	void moveTo(ssCBuffer& _dst);
+	void moveTo(ssBuffer& _dst);
 
 	// Cast Operator
-	BAConstBuffer toConstbuffer() const;
-	BAMutableBuffer toMutableBuffer();
+	baConstBuffer toConstbuffer() const;
+	baMutableBuffer toMutableBuffer();
 };
