@@ -27,6 +27,9 @@
     <ClCompile Include="src\ssLib\ssService.cpp">
       <Filter>src\ssLib</Filter>
     </ClCompile>
+    <ClCompile Include="src\ssLib\ssSessionPerfCounterImpl.cpp">
+      <Filter>src\ssLib</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\stdafx.hpp">

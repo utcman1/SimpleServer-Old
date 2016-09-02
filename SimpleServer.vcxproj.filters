@@ -8,6 +8,9 @@
     <Filter Include="src\ssLib">
       <UniqueIdentifier>{1ff79c24-acf5-4ea1-b00a-9b45ab4e331a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\ssImpl">
+      <UniqueIdentifier>{f13f3567-c5e2-4984-ae81-56db18ac377c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\SimpleServer.cpp">
@@ -19,14 +22,17 @@
     <ClCompile Include="src\ssLib\ssBuffer.cpp">
       <Filter>src\ssLib</Filter>
     </ClCompile>
-    <ClCompile Include="src\ssLib\ssSession.cpp">
-      <Filter>src\ssLib</Filter>
-    </ClCompile>
     <ClCompile Include="src\ssLib\ssAcceptor.cpp">
       <Filter>src\ssLib</Filter>
     </ClCompile>
     <ClCompile Include="src\ssLib\ssService.cpp">
       <Filter>src\ssLib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ssLib\ssSessionPerfCounter.cpp">
+      <Filter>src\ssLib</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ssImpl\ssEchoServerSessionHandler.cpp">
+      <Filter>src\ssImpl</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -51,8 +57,26 @@
     <ClInclude Include="src\ssLib.hpp">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="src\ssLib\ssSessionPool.hpp">
+      <Filter>src\ssLib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ssLib\ssSessionPerfCounter.hpp">
+      <Filter>src\ssLib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ssLib\ssISessionHandler.hpp">
+      <Filter>src\ssLib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ssImpl\ssEchoServerSessionHandler.hpp">
+      <Filter>src\ssImpl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+    <None Include="src\ssLib\ssSession.ipp">
+      <Filter>src\ssLib</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="TODO.txt" />
   </ItemGroup>
 </Project>

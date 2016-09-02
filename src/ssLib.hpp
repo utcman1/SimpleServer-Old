@@ -17,5 +17,8 @@ typedef boost::system::error_code			bsErrorCode;
 #include <ssLib/ssINonCopyable.hpp>
 #include <ssLib/ssBuffer.hpp>
 #include <ssLib/ssSession.hpp>
+#include <ssLib/ssSession.ipp>
+#include <ssLib/ssSessionPool.hpp>
+#include <ssLib/ssSessionPerfCounter.hpp>
 #include <ssLib/ssAcceptor.hpp>
 #include <ssLib/ssService.hpp>

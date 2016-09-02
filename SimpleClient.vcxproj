@@ -17,6 +17,7 @@
     <ClCompile Include="src\ssLib\ssBuffer.cpp" />
     <ClCompile Include="src\ssLib\ssService.cpp" />
     <ClCompile Include="src\ssLib\ssSession.cpp" />
+    <ClCompile Include="src\ssLib\ssSessionPerfCounterImpl.cpp" />
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>

@@ -21,6 +21,7 @@ bool ssBuffer::isCompletePacket() const
 {
 	// TODO : echo 서버를 위한 임시 구현
 	// 정식으로 구현하기 위해서는 Packet에 대한 정보가 필요하다.
+	// Buffer가 아닌 외부에 위치하도록 리팩토링이 맞을수도 있을거 같다.
 	return (0 < m_size);
 }
 
