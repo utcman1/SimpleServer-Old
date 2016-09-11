@@ -1,10 +1,11 @@
 ﻿class ssSessionPerfCounter
 {
 private:
+	typedef std::chrono::system_clock system_clock;
 	typedef std::chrono::system_clock::time_point time_point;
 
 private:
-	time_point m_nextTick = time_point::max();
+	time_point m_lastTick = time_point::max();
 
 	int m_nTotalRecv = 0;
 	int m_nTotalSend = 0;
@@ -17,11 +18,14 @@ private:
 	int m_nTickAcpt = 0;
 
 private:
-	void setNextTick();
+	void setLastTick();
 
 public:
-	void start()		{ setNextTick(); }
+	bool init();
+	void release() {}
 
+	// framework에서 일정 주기로 호출할 함수.
+	// perfCounter의 tick 주기는 외부에서 결정한다.
 	void onTick();
 
 	void onRecv()		{ ++m_nTotalRecv; ++m_nTickRecv; }

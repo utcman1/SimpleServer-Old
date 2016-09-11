@@ -1,8 +1,4 @@
-﻿class ssService;
-
-
-
-template<typename TSessionHandler>
+﻿template<typename TSessionHandler>
 class ssSessionPool
 {
 	typedef ssSession<TSessionHandler> ssSession;
@@ -14,23 +10,13 @@ private:
 	std::vector<ssSession*> m_poolSession;
 
 public:
-	ssSessionPool(ssService& _service, const int _poolSize)
-	{
-		m_poolSession.reserve(_poolSize);
+	ssSessionPool(baIoService& _service, const int _poolSize);
 
-		for (int i = 0; _poolSize > i; ++i)
-		{
-			m_poolSession.push_back(new ssSession(ssService& _service, *this));
-		}
-	}
+	bool init();
+	// TODO : release는 이렇게 작성하지 말고
+	// callback 형태로 작성해야 한다.
+	void release();
 
-	ssSession* alloc()
-	{
-		return (0 == m_poolSession.size()) ? nullptr : m_poolSession.pop_back();
-	}
-
-	void free(ssSession* _psession)
-	{
-		m_poolSession.push_back(_psession);
-	}
+	ssSession* alloc();
+	void free(ssSession* _psession);
 };

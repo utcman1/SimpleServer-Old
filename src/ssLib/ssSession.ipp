@@ -5,6 +5,13 @@ void ssSession<TSessionHandler>::log(const std::string& _msg)
 }
 
 template<typename TSessionHandler>
+void ssSession<TSessionHandler>::release()
+{
+	sessionHandler().onRelease();
+	m_sessionPool.free(this);
+}
+
+template<typename TSessionHandler>
 void ssSession<TSessionHandler>::releaseIfNeed()
 {
 	if (!this->m_bPandingClose) return;
@@ -19,30 +26,11 @@ void ssSession<TSessionHandler>::releaseIfNeed()
 template<typename TSessionHandler>
 void ssSession<TSessionHandler>::onError(const bsErrorCode& _ec)
 {
-	std::cerr << _ec.message() << std::endl;
+	ssSession::log(_ec.message());
 	ssSession::issueClose();
 }
 
 
-
-template<typename TSessionHandler>
-ssSession<TSessionHandler>::ssSession(ssService& _service, ssSessionPool<TSessionHandler>& _sessionPool)
-	: baSocket(_service), m_sessionPool(_sessionPool)
-{
-}
-
-template<typename TSessionHandler>
-void ssSession<TSessionHandler>::init()
-{
-	sessionHandler().onInit();
-}
-
-template<typename TSessionHandler>
-void ssSession<TSessionHandler>::release()
-{
-	sessionHandler().onRelease();
-	m_sessionPool.free(this);
-}
 
 template<typename TSessionHandler>
 void ssSession<TSessionHandler>::issueClose()
@@ -124,7 +112,7 @@ void ssSession<TSessionHandler>::issueRecv()
 			}
 
 			this->releaseIfNeed();
-	});
+		});
 }
 
 template<typename TSessionHandler>
@@ -158,5 +146,5 @@ void ssSession<TSessionHandler>::issueSend()
 			}
 
 			this->releaseIfNeed();
-	});
+		});
 }

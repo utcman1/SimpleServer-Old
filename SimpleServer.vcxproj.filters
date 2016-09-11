@@ -22,12 +22,6 @@
     <ClCompile Include="src\ssLib\ssBuffer.cpp">
       <Filter>src\ssLib</Filter>
     </ClCompile>
-    <ClCompile Include="src\ssLib\ssAcceptor.cpp">
-      <Filter>src\ssLib</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ssLib\ssService.cpp">
-      <Filter>src\ssLib</Filter>
-    </ClCompile>
     <ClCompile Include="src\ssLib\ssSessionPerfCounter.cpp">
       <Filter>src\ssLib</Filter>
     </ClCompile>
@@ -51,9 +45,6 @@
     <ClInclude Include="src\ssLib\ssAcceptor.hpp">
       <Filter>src\ssLib</Filter>
     </ClInclude>
-    <ClInclude Include="src\ssLib\ssService.hpp">
-      <Filter>src\ssLib</Filter>
-    </ClInclude>
     <ClInclude Include="src\ssLib.hpp">
       <Filter>src</Filter>
     </ClInclude>
@@ -73,6 +64,12 @@
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="src\ssLib\ssSession.ipp">
+      <Filter>src\ssLib</Filter>
+    </None>
+    <None Include="src\ssLib\ssAcceptor.ipp">
+      <Filter>src\ssLib</Filter>
+    </None>
+    <None Include="src\ssLib\ssSessionPool.ipp">
       <Filter>src\ssLib</Filter>
     </None>
   </ItemGroup>

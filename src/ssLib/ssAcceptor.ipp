@@ -23,8 +23,8 @@ void ssAcceptor::onCompleteAccept(const bsErrorCode& _ec, ssSession& _session)
 
 
 
-ssAcceptor::ssAcceptor(ssService& _server)
-	: baAcceptor(_server), m_server(_server)
+ssAcceptor::ssAcceptor(baIoService& _service)
+	: baAcceptor(_service)
 {
 }
 

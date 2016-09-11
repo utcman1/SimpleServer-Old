@@ -14,9 +14,7 @@
   <ItemGroup>
     <ClCompile Include="src\SimpleServer.cpp" />
     <ClCompile Include="src\ssImpl\ssEchoServerSessionHandler.cpp" />
-    <ClCompile Include="src\ssLib\ssAcceptor.cpp" />
     <ClCompile Include="src\ssLib\ssBuffer.cpp" />
-    <ClCompile Include="src\ssLib\ssService.cpp" />
     <ClCompile Include="src\ssLib\ssSessionPerfCounter.cpp" />
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
@@ -28,7 +26,6 @@
     <ClInclude Include="src\ssLib\ssAcceptor.hpp" />
     <ClInclude Include="src\ssLib\ssBuffer.hpp" />
     <ClInclude Include="src\ssLib\ssISessionHandler.hpp" />
-    <ClInclude Include="src\ssLib\ssService.hpp" />
     <ClInclude Include="src\ssLib\ssSession.hpp" />
     <ClInclude Include="src\ssLib\ssINonCopyable.hpp" />
     <ClInclude Include="src\ssLib\ssSessionPerfCounter.hpp" />
@@ -37,7 +34,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+    <None Include="src\ssLib\ssAcceptor.ipp" />
     <None Include="src\ssLib\ssSession.ipp" />
+    <None Include="src\ssLib\ssSessionPool.ipp" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="TODO.txt" />

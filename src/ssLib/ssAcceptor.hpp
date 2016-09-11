@@ -1,24 +1,54 @@
-﻿class ssService;
-class ssSession;
-
-
-
+﻿template<typename TSessionHandler>
 class ssAcceptor
-	: public baAcceptor
+	: private baAcceptor
 {
 private:
-	ssService& m_server;
-
-private:
-	// TODO : 현재는 임시 구현이다. 정식 구현에서는 외부에서 핸들러를 받아야 한다.
-	void onError(const bsErrorCode& _ec);
-	void onCompleteAccept(const bsErrorCode& _ec, ssSession& _session);
+	ssSessionPool			m_sessionPool;
+	ssSessionPerfCounter	m_sessionPerfCounter;
 
 public:
-	ssAcceptor(ssService& _server);
+	ssAcceptor(baIoService& _service)
+		: baAcceptor(_service)
+	{}
 
-	bool init(const baEndpoint _ep);
-	void release();
+	bool init(const int _poolSize)
+	{
+		return	(m_sessionPool.init(_poolSize)) &&
+				(m_sessionPerfCounter.init());
+	}
 
-	bool issueAccept();
+	void release()
+	{
+		m_sessionPool.release();
+		m_sessionPerfCounter.release();
+	}
+
+
+
+	bool prepareAccept(const baEndpoint _ep)
+	{
+		baAcceptor::open(_ep.protocol());
+		baAcceptor::bind(_ep);
+		baAcceptor::listen();
+	}
+
+	bool issueAccept()
+	{
+		ssSession* psession = m_server.allocSession();
+		if (nullptr == psession)
+			return false;
+
+		baAcceptor::async_accept(*psession,
+			[this, psession](const bsErrorCode& _ec)
+		{
+			this->onCompleteAccept(_ec, *psession);
+		});
+		return true;
+	}
+
+	void cancelAccept()
+	{
+		baAcceptor::cancel();
+		baAcceptor::close();
+	}
 };

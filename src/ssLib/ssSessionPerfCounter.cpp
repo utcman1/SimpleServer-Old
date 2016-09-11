@@ -28,9 +28,28 @@ void printPerf(const std::chrono::milliseconds _duration,
 
 
 
-void ssSessionPerfCounter::setNextTick()
+void ssSessionPerfCounter::setLastTick()
 {
-	m_nextTick = m_nextTick + std::chrono::seconds(1);
+	m_lastTick = system_clock::now();
+}
+
+
+
+bool ssSessionPerfCounter::init()
+{
+	ssSessionPerfCounter::setLastTick();
+
+	m_nTotalRecv = 0;
+	m_nTotalSend = 0;
+	m_nTotalConn = 0;
+	m_nTotalAcpt = 0;
+
+	m_nTickRecv = 0;
+	m_nTickSend = 0;
+	m_nTickConn = 0;
+	m_nTickAcpt = 0;
+
+	return true;
 }
 
 void ssSessionPerfCounter::onTick()
@@ -38,7 +57,7 @@ void ssSessionPerfCounter::onTick()
 	using namespace std::chrono;
 
 	const time_point now = system_clock::now();
-	const auto msDuration = duration_cast<milliseconds>(now + seconds(1) - m_nextTick);
+	const auto msDuration = duration_cast<milliseconds>(now - m_lastTick);
 
 	if (0 < m_nTickRecv) printPerf(msDuration, "totalRecv", "tickRecv", m_nTotalRecv, m_nTickRecv);
 	if (0 < m_nTickSend) printPerf(msDuration, "totalSend", "tickSend", m_nTotalSend, m_nTickSend);
@@ -49,4 +68,6 @@ void ssSessionPerfCounter::onTick()
 	m_nTickSend = 0;
 	m_nTickConn = 0;
 	m_nTickAcpt = 0;
+
+	m_lastTick = now;
 }

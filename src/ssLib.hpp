@@ -19,6 +19,6 @@ typedef boost::system::error_code			bsErrorCode;
 #include <ssLib/ssSession.hpp>
 #include <ssLib/ssSession.ipp>
 #include <ssLib/ssSessionPool.hpp>
+#include <ssLib/ssSessionPool.ipp>
 #include <ssLib/ssSessionPerfCounter.hpp>
 #include <ssLib/ssAcceptor.hpp>
-#include <ssLib/ssService.hpp>
