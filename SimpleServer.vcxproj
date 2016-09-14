@@ -26,10 +26,12 @@
     <ClInclude Include="src\ssLib\ssAcceptor.hpp" />
     <ClInclude Include="src\ssLib\ssBuffer.hpp" />
     <ClInclude Include="src\ssLib\ssISessionHandler.hpp" />
+    <ClInclude Include="src\ssLib\ssLog.hpp" />
     <ClInclude Include="src\ssLib\ssSession.hpp" />
     <ClInclude Include="src\ssLib\ssINonCopyable.hpp" />
     <ClInclude Include="src\ssLib\ssSessionPerfCounter.hpp" />
     <ClInclude Include="src\ssLib\ssSessionPool.hpp" />
+    <ClInclude Include="src\ssLib\ssUtil.hpp" />
     <ClInclude Include="src\stdafx.hpp" />
   </ItemGroup>
   <ItemGroup>

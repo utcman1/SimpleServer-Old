@@ -17,11 +17,11 @@ const std::string currentDateTime()
 
 void printPerf(const std::chrono::milliseconds _duration,
 	const std::string& _totalName, const std::string& _tickName,
-	const int _nTotalCount, const int _nTickCount)
+	const std::size_t _nTotalCount, const std::size_t _nTickCount)
 {
 	using namespace std;
 
-	cout << currentDateTime() << " : [" << cout.width(4) << _duration.count() << "]ms / "
+	std::cout << currentDateTime() << " : [" << cout.width(4) << _duration.count() << "]ms / "
 		<< _totalName << "[" << cout.width(6) << _nTotalCount << "] / "
 		<< _tickName << "[" << cout.width(6) << _nTickCount << "]" << std::endl;
 }

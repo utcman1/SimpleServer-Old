@@ -7,15 +7,15 @@ private:
 private:
 	time_point m_lastTick = time_point::max();
 
-	int m_nTotalRecv = 0;
-	int m_nTotalSend = 0;
-	int m_nTotalConn = 0;
-	int m_nTotalAcpt = 0;
+	std::size_t m_nTotalRecv = 0;
+	std::size_t m_nTotalSend = 0;
+	std::size_t m_nTotalConn = 0;
+	std::size_t m_nTotalAcpt = 0;
 
-	int m_nTickRecv = 0;
-	int m_nTickSend = 0;
-	int m_nTickConn = 0;
-	int m_nTickAcpt = 0;
+	std::size_t m_nTickRecv = 0;
+	std::size_t m_nTickSend = 0;
+	std::size_t m_nTickConn = 0;
+	std::size_t m_nTickAcpt = 0;
 
 private:
 	void setLastTick();
@@ -28,8 +28,8 @@ public:
 	// perfCounter의 tick 주기는 외부에서 결정한다.
 	void onTick();
 
-	void onRecv()		{ ++m_nTotalRecv; ++m_nTickRecv; }
-	void onSend()		{ ++m_nTotalSend; ++m_nTickSend; }
-	void onConnect()	{ ++m_nTotalConn; ++m_nTickConn; }
-	void onAccept()		{ ++m_nTotalAcpt; ++m_nTickAcpt; }
+	void countRecv()	{ ++m_nTotalRecv; ++m_nTickRecv; }
+	void countSend()	{ ++m_nTotalSend; ++m_nTickSend; }
+	void countConnect()	{ ++m_nTotalConn; ++m_nTickConn; }
+	void countAccept()	{ ++m_nTotalAcpt; ++m_nTickAcpt; }
 };

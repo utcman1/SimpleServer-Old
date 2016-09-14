@@ -1,13 +1,21 @@
 ﻿#include <stdafx.hpp>
 #include <ssLib.hpp>
+#include <ssImpl/ssEchoServerSessionHandler.hpp>
 
 
 
 int main()
 {
-	ssService server;
-	server.accept(baEndpoint(baAddr::from_string("127.0.0.1"), 9999));
-	server.run();
+	baIoService service;
+	ssAcceptor<ssEchoServerSessionHandler> acceptor(service);
+	if (!acceptor.init(service, 1))
+	{
+		std::cerr << "Fail to acceptor.init()" << std::endl;
+	}
+
+	acceptor.accept(baEndpoint(baAddr::from_string("127.0.0.1"), 9999));
+
+	service.run();
 
     return 0;
 }

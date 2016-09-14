@@ -1,21 +1,19 @@
 ﻿template<typename TSessionHandler>
-ssSessionPool<TSessionHandler>::ssSessionPool(baIoService& _service, const int _poolSize)
+bool ssSessionPool<TSessionHandler>::init(baIoService& _service, const std::size_t _poolSize)
 {
-	m_poolSession.reserve(_poolSize);
+	if (!ssSessionPerfCounter::init())
+		return false;
 
-	for (int i = 0; _poolSize > i; ++i)
-	{
-		m_poolSession.push_back(new ssSession(_service, *this));
-	}
-}
+	m_free.reserve(_poolSize);
+	m_alloc.reserve(_poolSize);
 
-template<typename TSessionHandler>
-bool ssSessionPool<TSessionHandler>::init()
-{
-	for (ssSession* pSession : m_poolSession)
+	for (std::size_t i = 0; _poolSize > i; ++i)
 	{
+		ssSession* pSession = new ssSession(_service, *this);
 		if (!pSession->init())
 			return false;
+
+		m_free.push_back(pSession);
 	}
 
 	return true;
@@ -24,19 +22,46 @@ bool ssSessionPool<TSessionHandler>::init()
 template<typename TSessionHandler>
 void ssSessionPool<TSessionHandler>::release()
 {
-	// 풀에 모두 반납된 상태에서 release() 호출해야 한다.
-	assert(m_poolSession.capacity() == m_poolSession.size());
+	assert(0 == m_alloc.size());
+	assert(m_free.capacity() == m_free.size());
+
+	for (ssSession* pSession : m_free)
+	{
+		free(pSession);
+	}
+
+	m_free.clear();
+
+	ssSessionPerfCounter::release();
 }
+
+template<typename TSessionHandler>
+void ssSessionPool<TSessionHandler>::close()
+{
+	for (ssSession* pSession : m_alloc)
+	{
+		pSession->issueClose();
+	}
+}
+
+
 
 template<typename TSessionHandler>
 ssSession<TSessionHandler>* ssSessionPool<TSessionHandler>::alloc()
 {
-	return (0 == m_poolSession.size()) ? nullptr : m_poolSession.pop_back();
+	if (0 == m_free.size())
+		return nullptr;
+
+	ssSession* pSession = m_free.back();
+	m_free.pop_back();
+	pSession->init();
+	m_alloc.push_back(pSession);
+	return pSession;
 }
 
-
 template<typename TSessionHandler>
-void ssSessionPool<TSessionHandler>::free(ssSession* _psession)
+void ssSessionPool<TSessionHandler>::free(ssSession* _pSession)
 {
-	m_poolSession.push_back(_psession);
+	erase(m_alloc, _pSession);
+	m_free.push_back(_pSession);
 }

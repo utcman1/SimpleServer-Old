@@ -4,66 +4,37 @@
 
 
 
-void ssEchoServerSessionHandler::onError(const bsErrorCode& _ec)
+void ssEchoServerSessionHandler::onAccept()
 {
-	std::cerr << _ec.message() << std::endl;
+	// 첫번째 메시지 전송은 "클라 => 서버" 이다.
+	ssSession::issueRecv();
 }
 
-void ssEchoServerSessionHandler::onCompleteRecv(const bsErrorCode& _ec, const std::size_t _len)
+void ssEchoServerSessionHandler::onRecv(const std::size_t _len)
 {
-	if (_ec)
+	m_recvBuffer.completePush(_len);
+
+	if (0 < m_recvBuffer.size())
 	{
-		this->onError(_ec);
+		m_sendBuffer.push(m_recvBuffer);
+		ssSession::issueSend();
 	}
 	else
 	{
-		ssSessionPerfCounter::onRecv();
-
-		m_recvBuffer.push(_len);
-
-		if (m_recvBuffer.isCompletePacket())
-		{
-			m_recvBuffer.moveTo(m_sendBuffer);
-			this->issueSend();
-		}
-		else
-		{
-			this->issueRecv();
-		}
+		ssSession::issueRecv();
 	}
 }
 
-void ssEchoServerSessionHandler::onCompleteSend(const bsErrorCode& _ec, const std::size_t _len)
+void ssEchoServerSessionHandler::onSend(const std::size_t _len)
 {
-	if (_ec)
+	m_sendBuffer.completePop(_len);
+
+	if (m_sendBuffer.empty())
 	{
-		this->onError(_ec);
+		ssSession::issueRecv();
 	}
 	else
 	{
-		m_sendBuffer.pop(_len);
-
-		if (m_sendBuffer.empty())
-		{
-			this->issueRecv();
-		}
-		else
-		{
-			this->issueSend();
-		}
-	}
-}
-
-void ssEchoServerSessionHandler::onCompleteConnect(const bsErrorCode& _ec)
-{
-	if (_ec)
-	{
-		this->onError(_ec);
-	}
-	else
-	{
-		// TODO : connect 성공하면 echo send를 시작한다. 이건 임시 구현이다.
-		m_sendBuffer.push(1);
-		this->issueSend();
+		ssSession::issueSend();
 	}
 }

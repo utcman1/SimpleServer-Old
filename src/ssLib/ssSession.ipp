@@ -1,24 +1,37 @@
 ﻿template<typename TSessionHandler>
-void ssSession<TSessionHandler>::log(const std::string& _msg)
-{
-	std::cerr << _msg << std::endl;
-}
-
-template<typename TSessionHandler>
 void ssSession<TSessionHandler>::release()
 {
+	// CLOSED 상태의 세션만 release가 가능하다.
+	assert(ES_CLOSED == m_state);
+	assert(ssSession::isIdle());
+
+	// 코드가 대칭을 이루지 못해 안이쁘긴 하지만.
+	// sessionPool::alloc() & session::init() 호출 코드는 sessionPool::alloc()에
+	// session::release() & sessionPool::free() 호출 코드는 session::release()에
+	// 위치하는 것이 맞다.
+	// 세션 생성 시점에는 외부에서 세션풀을 통한 할당으로 처리
+	// 세션의 소멸 시점에는 세션 자체에서 수명주기 관리를 통한 처리
 	sessionHandler().onRelease();
 	m_sessionPool.free(this);
 }
 
 template<typename TSessionHandler>
-void ssSession<TSessionHandler>::releaseIfNeed()
+void ssSession<TSessionHandler>::completeClose()
 {
-	if (!this->m_bPandingClose) return;
-	if (this->m_bPendingConnect || this->m_bPendingRecv || this->m_bPendingSend) return;
+	// 이 함수는 실제 close가 진행중이 아닌 상태에서도 호출하기 때문에 assert로 검사하지 않는다.
+	if (!m_bPendingClose) return;
 
-	// close가 진행중이고, pending중인 작업이 없으면 relese를 호출한다.
-	this->release();
+	// ES_CLOSED 상태에서 completeClose()를 진행하는게 좀 이상하지만,
+	// ES_PENDING_CONNECT/ES_PENDING_ACCEPT 상태에서 issueClose()를 진행하면
+	// ES_ESTABLISHED 상태로 진입하지 않고 바로 ES_CLOSED 상태로 진행한다.
+	if (ES_CLOSED != m_state && ES_ESTABLISHED != m_state) return;
+	if (m_bPendingRecv || m_bPendingSend) return;
+
+	// complete close
+	m_bPendingClose = false;
+	m_state = ES_CLOSED;
+
+	ssSession::release();
 }
 
 
@@ -26,8 +39,7 @@ void ssSession<TSessionHandler>::releaseIfNeed()
 template<typename TSessionHandler>
 void ssSession<TSessionHandler>::onError(const bsErrorCode& _ec)
 {
-	ssSession::log(_ec.message());
-	ssSession::issueClose();
+	ssWARNING << _ec.message();
 }
 
 
@@ -35,9 +47,11 @@ void ssSession<TSessionHandler>::onError(const bsErrorCode& _ec)
 template<typename TSessionHandler>
 void ssSession<TSessionHandler>::issueClose()
 {
+	assert(ES_CLOSED != m_state);
+
 	if (m_bPendingClose)
 	{
-		ssSession::log("Ignore issueClose() call on PendingClose session");
+		ssERROR << "Ignore issueClose() call : PendingClose";
 		return;
 	}
 
@@ -49,102 +63,141 @@ void ssSession<TSessionHandler>::issueClose()
 template<typename TSessionHandler>
 void ssSession<TSessionHandler>::issueConnect(const baEndpoint _ep)
 {
-	if (m_bPendingClose)
-	{
-		ssSession::log("Ignore issueConnect() call on PendingClose session");
-		return;
-	}
+	assert(ES_CLOSED == m_state);
+	assert(ssSession::isIdle());
 
-	if (m_bPendingConnect)
-	{
-		ssSession::log("Ignore issueConnect() call on PendingConnect session");
-		return;
-	}
-
-	this->m_bPendingConnect = true;
+	m_state = ES_PENDING_CONNECT;
 	baSocket::async_connect(_ep,
 		[this](const bsErrorCode& _ec)
 		{
-			this->m_bPendingConnect = false;
 			TSessionHandler& handler = this->sessionHandler();
 
 			if (_ec)
 			{
 				handler.onConnectError(_ec);
+				ssSession::issueClose();
 			}
 			else
 			{
+				m_sessionPool.countConnect();
 				handler.onConnect();
+				this->m_state = ES_ESTABLISHED;
 			}
 
-			this->releaseIfNeed();
+			this->completeClose();
+		});
+}
+
+template<typename TSessionHandler>
+void ssSession<TSessionHandler>::issueAccept(baAcceptor& _acceptor)
+{
+	assert(ES_CLOSED == m_state);
+	assert(isIdle());
+
+	m_state = ES_PENDING_ACCEPT;
+	_acceptor.async_accept(*this,
+		[this](const bsErrorCode& _ec)
+		{
+			TSessionHandler& handler = this->sessionHandler();
+
+			if (_ec)
+			{
+				handler.onAcceptError(_ec);
+				ssSession::issueClose();
+			}
+			else
+			{
+				m_sessionPool.countAccept();
+				handler.onAccept();
+				this->m_state = ES_ESTABLISHED;
+			}
+
+			this->completeClose();
 		});
 }
 
 template<typename TSessionHandler>
 void ssSession<TSessionHandler>::issueRecv()
 {
+	if (ES_ESTABLISHED != m_state)
+	{
+		ssERROR << "Ignore issueRecv() call : not ES_ESTABLISHED";
+		return;
+	}
+
 	if (m_bPendingClose)
 	{
-		ssSession::log("Ignore issueRecv() call on PendingClose session");
+		ssERROR << "Ignore issueRecv() call : PendingClose";
 		return;
 	}
 
 	if (m_bPendingRecv)
 	{
-		ssSession::log("Ignore issueRecv() call on PendingRecv session");
+		ssERROR << "Ignore issueRecv() call : PendingRecv";
 		return;
 	}
 
-	this->m_bPendingRecv = true;
+	m_bPendingRecv = true;
 	baSocket::async_read_some(m_recvBuffer.toMutableBuffer(),
 		[this](const bsErrorCode& _ec, std::size_t _len)
 		{
-			this->m_bPendingRecv = false;
+			m_bPendingRecv = false;
 			TSessionHandler& handler = this->sessionHandler();
+
 			if (_ec)
 			{
 				handler.onRecvError(_ec);
+				ssSession::issueClose();
 			}
 			else
 			{
+				m_sessionPool.countRecv();
 				handler.onRecv(_len);
 			}
 
-			this->releaseIfNeed();
+			this->completeClose();
 		});
 }
 
 template<typename TSessionHandler>
 void ssSession<TSessionHandler>::issueSend()
 {
+	if (ES_ESTABLISHED != m_state)
+	{
+		ssERROR << "Ignore issueSend() call : not ES_ESTABLISHED";
+		return;
+	}
+
 	if (m_bPendingClose)
 	{
-		ssSession::log("Ignore issueSend() call on PendingClose session");
+		ssERROR << "Ignore issueSend() call : PendingClose";
 		return;
 	}
 
 	if (m_bPendingSend)
 	{
-		ssSession::log("Ignore issueSend() call on PendingSend session");
+		ssERROR << "Ignore issueSend() call : PendingSend";
 		return;
 	}
 
-	this->m_bPendingSend = true;
+	m_bPendingSend = true;
 	baSocket::async_write_some(m_sendBuffer.toConstbuffer(),
 		[this](const bsErrorCode& _ec, std::size_t _len)
 		{
-			this->m_bPendingSend = false;
+			m_bPendingSend = false;
 			TSessionHandler& handler = this->sessionHandler();
+
 			if (_ec)
 			{
 				handler.onSendError(_ec);
+				ssSession::issueClose();
 			}
 			else
 			{
+				m_sessionPool.countSend();
 				handler.onSend(_len);
 			}
 
-			this->releaseIfNeed();
+			this->completeClose();
 		});
 }

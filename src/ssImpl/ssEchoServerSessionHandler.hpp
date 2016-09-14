@@ -1,10 +1,20 @@
-﻿class ssEchoServerSessionHandler
+﻿class ssEchoServerSessionHandler final
 	: public ssSession<ssEchoServerSessionHandler>
 {
+private:
+	typedef ssSession<ssEchoServerSessionHandler> ssSession;
+
+private:
+	// constructor
+	ssEchoServerSessionHandler() = delete;
+	~ssEchoServerSessionHandler() = delete;
+
+	// copy constructor, assignment operator
+	ssEchoServerSessionHandler(const ssEchoServerSessionHandler&) = delete;
+	ssEchoServerSessionHandler& operator=(const ssEchoServerSessionHandler&) = delete;
+
 public:
-	void onTick();
-	void onError(const bsErrorCode& _ec);
-	void onCompleteRecv(const bsErrorCode& _ec, const std::size_t _len);
-	void onCompleteSend(const bsErrorCode& _ec, const std::size_t _len);
-	void onCompleteConnect(const bsErrorCode& _ec);
+	void onAccept();
+	void onRecv(const std::size_t _len);
+	void onSend(const std::size_t _len);
 };

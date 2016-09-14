@@ -4,6 +4,7 @@
 
 class ssBuffer
 {
+private:
 	typedef std::size_t size_t;
 
 private:
@@ -14,20 +15,19 @@ private:
 
 private:
 	char* ssBuffer::nextPtr();
-	void pushData(const char* _buffer, const size_t _len);
 
 public:
 	// Capacity
 	size_t capacity() const { return EC_Capacity; }
 	size_t size() const { return m_size; }
 	bool empty() const { return 0 == m_size; }
-	bool isCompletePacket() const;
 
 	// Modifiers
 	void clear();
-	void pop(const size_t _len);
-	void push(const size_t _len);
-	void moveTo(ssBuffer& _dst);
+	void completePop(const size_t _len);
+	void completePush(const size_t _len);
+	void push(const char* _buffer, const size_t _len);
+	void push(ssBuffer& _src);
 
 	// Cast Operator
 	baConstBuffer toConstbuffer() const;

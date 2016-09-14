@@ -1,0 +1,6 @@
+﻿#define ssTRACE BOOST_LOG_TRIVIAL(trace)
+#define ssDEBUG BOOST_LOG_TRIVIAL(debug)
+#define ssINFO BOOST_LOG_TRIVIAL(info)
+#define ssWARNING BOOST_LOG_TRIVIAL(warning)
+#define ssERROR BOOST_LOG_TRIVIAL(error)
+#define ssFATAL BOOST_LOG_TRIVIAL(fatal)

@@ -60,6 +60,12 @@
     <ClInclude Include="src\ssImpl\ssEchoServerSessionHandler.hpp">
       <Filter>src\ssImpl</Filter>
     </ClInclude>
+    <ClInclude Include="src\ssLib\ssUtil.hpp">
+      <Filter>src\ssLib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ssLib\ssLog.hpp">
+      <Filter>src\ssLib</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
