@@ -61,34 +61,6 @@ void ssSession<TSessionHandler>::issueClose()
 }
 
 template<typename TSessionHandler>
-void ssSession<TSessionHandler>::issueConnect(const baEndpoint _ep)
-{
-	assert(ES_CLOSED == m_state);
-	assert(ssSession::isIdle());
-
-	m_state = ES_PENDING_CONNECT;
-	baSocket::async_connect(_ep,
-		[this](const bsErrorCode& _ec)
-		{
-			TSessionHandler& handler = this->sessionHandler();
-
-			if (_ec)
-			{
-				handler.onConnectError(_ec);
-				ssSession::issueClose();
-			}
-			else
-			{
-				m_sessionPool.countConnect();
-				handler.onConnect();
-				this->m_state = ES_ESTABLISHED;
-			}
-
-			this->completeClose();
-		});
-}
-
-template<typename TSessionHandler>
 void ssSession<TSessionHandler>::issueAccept(baAcceptor& _acceptor)
 {
 	assert(ES_CLOSED == m_state);
@@ -96,7 +68,7 @@ void ssSession<TSessionHandler>::issueAccept(baAcceptor& _acceptor)
 
 	m_state = ES_PENDING_ACCEPT;
 	_acceptor.async_accept(*this,
-		[this](const bsErrorCode& _ec)
+		[this, &_acceptor](const bsErrorCode& _ec)
 		{
 			TSessionHandler& handler = this->sessionHandler();
 
@@ -113,6 +85,36 @@ void ssSession<TSessionHandler>::issueAccept(baAcceptor& _acceptor)
 			}
 
 			this->completeClose();
+			m_sessionPool.issueAccept(_acceptor);
+		});
+}
+
+template<typename TSessionHandler>
+void ssSession<TSessionHandler>::issueConnect(const baEndpoint& _ep)
+{
+	assert(ES_CLOSED == m_state);
+	assert(ssSession::isIdle());
+
+	m_state = ES_PENDING_CONNECT;
+	baSocket::async_connect(_ep,
+		[this, &_ep](const bsErrorCode& _ec)
+		{
+			TSessionHandler& handler = this->sessionHandler();
+
+			if (_ec)
+			{
+				handler.onConnectError(_ec);
+				ssSession::issueClose();
+			}
+			else
+			{
+				m_sessionPool.countConnect();
+				handler.onConnect();
+				this->m_state = ES_ESTABLISHED;
+			}
+
+			this->completeClose();
+			m_sessionPool.issueConnect(_ep);
 		});
 }
 

@@ -19,6 +19,6 @@ public:
 	using ssSessionPool::init;
 	using ssSessionPool::release;
 
-	void accept(const baEndpoint& _ep);		// throw accept exception
 	void close();
+	void accept(const baEndpoint& _ep);		// throw accept exception
 };

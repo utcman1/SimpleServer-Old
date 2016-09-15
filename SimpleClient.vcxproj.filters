@@ -7,6 +7,9 @@
     <Filter Include="src\ssLib">
       <UniqueIdentifier>{73b92b0b-ed84-4bdf-8b52-d3aaa03f0318}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\ssImpl">
+      <UniqueIdentifier>{ae031d64-acd6-44ee-9cbd-9d732d2c1368}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\SimpleClient.cpp">
@@ -15,19 +18,13 @@
     <ClCompile Include="src\stdafx.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="src\ssImpl\ssEchoClientSessionHandler.cpp">
+      <Filter>src\ssImpl</Filter>
+    </ClCompile>
     <ClCompile Include="src\ssLib\ssBuffer.cpp">
       <Filter>src\ssLib</Filter>
     </ClCompile>
-    <ClCompile Include="src\ssLib\ssSession.cpp">
-      <Filter>src\ssLib</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ssLib\ssAcceptor.cpp">
-      <Filter>src\ssLib</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ssLib\ssService.cpp">
-      <Filter>src\ssLib</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ssLib\ssSessionPerfCounterImpl.cpp">
+    <ClCompile Include="src\ssLib\ssSessionPerfCounter.cpp">
       <Filter>src\ssLib</Filter>
     </ClCompile>
   </ItemGroup>
@@ -35,26 +32,53 @@
     <ClInclude Include="src\stdafx.hpp">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="src\ssLib\ssINonCopyable.hpp">
+    <ClInclude Include="src\ssLib.hpp">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ssImpl\ssEchoClientSessionHandler.hpp">
+      <Filter>src\ssImpl</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ssLib\ssAcceptor.hpp">
       <Filter>src\ssLib</Filter>
     </ClInclude>
     <ClInclude Include="src\ssLib\ssBuffer.hpp">
       <Filter>src\ssLib</Filter>
     </ClInclude>
+    <ClInclude Include="src\ssLib\ssConnector.hpp">
+      <Filter>src\ssLib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ssLib\ssINonCopyable.hpp">
+      <Filter>src\ssLib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ssLib\ssLog.hpp">
+      <Filter>src\ssLib</Filter>
+    </ClInclude>
     <ClInclude Include="src\ssLib\ssSession.hpp">
       <Filter>src\ssLib</Filter>
     </ClInclude>
-    <ClInclude Include="src\ssLib\ssAcceptor.hpp">
+    <ClInclude Include="src\ssLib\ssSessionPerfCounter.hpp">
       <Filter>src\ssLib</Filter>
     </ClInclude>
-    <ClInclude Include="src\ssLib\ssService.hpp">
+    <ClInclude Include="src\ssLib\ssSessionPool.hpp">
       <Filter>src\ssLib</Filter>
     </ClInclude>
-    <ClInclude Include="src\ssLib.hpp">
-      <Filter>src</Filter>
+    <ClInclude Include="src\ssLib\ssUtil.hpp">
+      <Filter>src\ssLib</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
+    <None Include="src\ssLib\ssAcceptor.ipp">
+      <Filter>src\ssLib</Filter>
+    </None>
+    <None Include="src\ssLib\ssConnector.ipp">
+      <Filter>src\ssLib</Filter>
+    </None>
+    <None Include="src\ssLib\ssSession.ipp">
+      <Filter>src\ssLib</Filter>
+    </None>
+    <None Include="src\ssLib\ssSessionPool.ipp">
+      <Filter>src\ssLib</Filter>
+    </None>
   </ItemGroup>
 </Project>

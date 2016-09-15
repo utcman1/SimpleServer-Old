@@ -4,7 +4,7 @@
 	클라 접속에 대비해서 서버로 동작. session pool이 종속 자원으로 필요.
 	동시에 1개 이상의 "주소"에 대해 서비스 할 수 있다.
 	1개 이상의 주소에 대응할 경우에도 session pool은 공유가 가능하다.
-	=> 일단은 1개 이상의 주소에 대응하는 경우는 무시한다. 추후 기능 확장시 작업.ㅇ
+	=> 일단은 1개 이상의 주소에 대응하는 경우는 무시한다. 추후 기능 확장시 작업.
 
 	독립 적인 서비스를 제공하는 경우 ex) 채팅 서버 & 게임 서버, 독립 적인 acceptor & 세션풀을 가져야 할 수 있다.
 	설계 목표는 symmetric한 구성을 고려하고 있기 때문에 여러개의 acceptor 패턴을 고려하고 있지 않다.
@@ -30,10 +30,11 @@
 3. session handler
 	onError / onRecv / onSend / onAccept / 	onConnect
 	핸들러 호출 위치는 session이지만 핸들러의 내용은 acceptor / connector에 있다.
-	CRTP 패턴으로 session<acceptor> 형태로 사용하거나 interface 패턴을 적용해야 한다.
+	CRTP 패턴으로 session<handler> 형태로 사용한다.
 
 4. perf counter
 	acceptor / connector 별로 독립적으로 관리한다.
+	=> session pool에 통합한다.
 
 5. service와 acceptor / connector 관계
 	service에서 acceptor / connector를 포함하도록 설계하는 경우

@@ -65,3 +65,17 @@ void ssSessionPool<TSessionHandler>::free(ssSession* _pSession)
 	erase(m_alloc, _pSession);
 	m_free.push_back(_pSession);
 }
+
+// TODO : accept, connect에 대한 backlog 구현이 필요하다.
+// TODO : pool을 모두 소모한 상황에 대한 처리가 필요하다.
+template<typename TSessionHandler>
+void ssSessionPool<TSessionHandler>::issueAccept(baAcceptor& _acceptor)
+{
+	ssSessionPool::alloc()->issueAccept(_acceptor);
+}
+
+template<typename TSessionHandler>
+void ssSessionPool<TSessionHandler>::issueConnect(const baEndpoint& _ep)
+{
+	ssSessionPool::alloc()->issueConnect(_ep);
+}

@@ -23,5 +23,3 @@
 #pragma warning(disable : 4710) // function not inlined
 #pragma warning(disable : 4714) // function marked as __forceinline not inlined : boost::log
 #pragma warning(disable : 4820) // bytes padding added
-
-// #pragma warning(disable : 4625 4626 5026 5027)

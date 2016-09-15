@@ -1,6 +1,12 @@
 ﻿template<typename TSessionHandler>
 class ssSessionPool;
 
+template<typename TSessionHandler>
+class ssAcceptor;
+
+template<typename TSessionHandler>
+class ssConnector;
+
 
 
 // TODO : 효율적인 pooling을 위해서는 move constructor & move assignment operator를 정의해야 한다.
@@ -9,7 +15,9 @@ class ssSession
 	: private baSocket
 {
 private:
-	typedef ssSessionPool<TSessionHandler> ssSessionPool;
+	typedef ssSessionPool<TSessionHandler>	ssSessionPool;
+	typedef ssAcceptor<TSessionHandler>		ssAcceptor;
+	typedef ssConnector<TSessionHandler>	ssConnector;
 
 protected:
 	// TSessionHandler에서 api를 통한 버퍼 접근 권한이 필요하다.
@@ -22,8 +30,8 @@ private:
 	enum EState : uint8_t
 	{
 		ES_CLOSED,
-		ES_PENDING_CONNECT,		// connect 진행중
 		ES_PENDING_ACCEPT,		// accept 대기중
+		ES_PENDING_CONNECT,		// connect 진행중
 		ES_ESTABLISHED			// 연결된 상태 recv / send 가 가능하다.
 	} m_state = ES_CLOSED;
 
@@ -73,12 +81,13 @@ private:
 	// issueClose()를 호출하는 경우에는 굳이 필요하지 않지만, 에러로 세션이 종료되는 경우를 위해 필요하다.
 	void onClosing() {}
 
-	void onConnect() {}
-	void onConnectError(const bsErrorCode& _ec) { sessionHandler().onError(_ec); }
-
 	// accept완료 이후 생성된 socket에서 호출됨
 	void onAccept() {}
 	void onAcceptError(const bsErrorCode& _ec) { sessionHandler().onError(_ec); }
+
+	// connect 완료
+	void onConnect() {}
+	void onConnectError(const bsErrorCode& _ec) { sessionHandler().onError(_ec); }
 
 
 	void onRecv(const std::size_t _len);
@@ -97,11 +106,11 @@ public:
 	bool init() { return sessionHandler().onInit(); }
 
 	void issueClose();
-	void issueConnect(const baEndpoint _ep);
 
 	// acceptor의 기능이지만 session 내부 구현에 매우 종속적이기 때문에 이곳에 구현한다.
 	// 설계 측면에서도 나쁘지 않다.
 	void issueAccept(baAcceptor& _acceptor);
+	void issueConnect(const baEndpoint& _ep);
 
 	void issueRecv();
 	void issueSend();

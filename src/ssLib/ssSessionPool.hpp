@@ -19,4 +19,9 @@ public:
 
 	ssSession* alloc();
 	void free(ssSession* _pSession);
+
+	// accept, connect동작은 session 할당과 같이 이루어지기 때문에
+	// session pool에 위치한다.
+	void issueAccept(baAcceptor& _acceptor);
+	void issueConnect(const baEndpoint& _ep);
 };

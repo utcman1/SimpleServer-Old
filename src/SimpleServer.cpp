@@ -11,6 +11,7 @@ int main()
 	if (!acceptor.init(service, 1))
 	{
 		std::cerr << "Fail to acceptor.init()" << std::endl;
+		return -1;
 	}
 
 	acceptor.accept(baEndpoint(baAddr::from_string("127.0.0.1"), 9999));

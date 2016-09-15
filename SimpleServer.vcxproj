@@ -13,30 +13,31 @@
   </ImportGroup>
   <ItemGroup>
     <ClCompile Include="src\SimpleServer.cpp" />
-    <ClCompile Include="src\ssImpl\ssEchoServerSessionHandler.cpp" />
-    <ClCompile Include="src\ssLib\ssBuffer.cpp" />
-    <ClCompile Include="src\ssLib\ssSessionPerfCounter.cpp" />
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="src\ssImpl\ssEchoServerSessionHandler.cpp" />
+    <ClCompile Include="src\ssLib\ssBuffer.cpp" />
+    <ClCompile Include="src\ssLib\ssSessionPerfCounter.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="src\ssImpl\ssEchoServerSessionHandler.hpp" />
+    <ClInclude Include="src\stdafx.hpp" />
     <ClInclude Include="src\ssLib.hpp" />
+    <ClInclude Include="src\ssImpl\ssEchoServerSessionHandler.hpp" />
     <ClInclude Include="src\ssLib\ssAcceptor.hpp" />
     <ClInclude Include="src\ssLib\ssBuffer.hpp" />
-    <ClInclude Include="src\ssLib\ssISessionHandler.hpp" />
+    <ClInclude Include="src\ssLib\ssConnector.hpp" />
+    <ClInclude Include="src\ssLib\ssINonCopyable.hpp" />
     <ClInclude Include="src\ssLib\ssLog.hpp" />
     <ClInclude Include="src\ssLib\ssSession.hpp" />
-    <ClInclude Include="src\ssLib\ssINonCopyable.hpp" />
     <ClInclude Include="src\ssLib\ssSessionPerfCounter.hpp" />
     <ClInclude Include="src\ssLib\ssSessionPool.hpp" />
     <ClInclude Include="src\ssLib\ssUtil.hpp" />
-    <ClInclude Include="src\stdafx.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="src\ssLib\ssAcceptor.ipp" />
+    <None Include="src\ssLib\ssConnector.ipp" />
     <None Include="src\ssLib\ssSession.ipp" />
     <None Include="src\ssLib\ssSessionPool.ipp" />
   </ItemGroup>
