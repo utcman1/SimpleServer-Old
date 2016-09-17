@@ -3,22 +3,20 @@
 private:
 	typedef std::chrono::system_clock system_clock;
 	typedef std::chrono::system_clock::time_point time_point;
+	typedef std::size_t size_t;
 
 private:
 	time_point m_lastTick = time_point::max();
 
-	std::size_t m_nTotalRecv = 0;
-	std::size_t m_nTotalSend = 0;
-	std::size_t m_nTotalConn = 0;
-	std::size_t m_nTotalAcpt = 0;
+	size_t m_nTotalRecv = 0;
+	size_t m_nTotalSend = 0;
+	size_t m_nTotalConn = 0;
+	size_t m_nTotalAcpt = 0;
 
-	std::size_t m_nTickRecv = 0;
-	std::size_t m_nTickSend = 0;
-	std::size_t m_nTickConn = 0;
-	std::size_t m_nTickAcpt = 0;
-
-private:
-	void setLastTick();
+	size_t m_nTickRecv = 0;
+	size_t m_nTickSend = 0;
+	size_t m_nTickConn = 0;
+	size_t m_nTickAcpt = 0;
 
 public:
 	bool init();

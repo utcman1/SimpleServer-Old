@@ -9,7 +9,7 @@ public:
 	ssINonCopyable(const ssINonCopyable&) = delete;
 	ssINonCopyable& operator=(const ssINonCopyable&) = delete;
 
-	// move constructor
+	// move constructor, move assignment operator
 	ssINonCopyable(const ssINonCopyable&&) = delete;
 	ssINonCopyable& operator=(const ssINonCopyable&&) = delete;
 };

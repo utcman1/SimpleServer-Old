@@ -8,7 +8,7 @@ int main()
 {
 	baIoService service;
 	ssConnector<ssEchoClientSessionHandler> connector;
-	if (!connector.init(service, 1))
+	if (!connector.init(service, 1, 1))
 	{
 		std::cerr << "Fail to connector.init()" << std::endl;
 		return -1;

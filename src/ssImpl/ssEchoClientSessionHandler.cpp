@@ -4,7 +4,7 @@
 
 
 
-void ssEchoClientSessionHandler::onConect()
+void ssEchoClientSessionHandler::onConnect()
 {
 	// 첫번째 메시지 전송은 "클라 => 서버" 이다.
 	m_sendBuffer.push("A", 1);

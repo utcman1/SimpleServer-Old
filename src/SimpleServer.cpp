@@ -8,7 +8,7 @@ int main()
 {
 	baIoService service;
 	ssAcceptor<ssEchoServerSessionHandler> acceptor(service);
-	if (!acceptor.init(service, 1))
+	if (!acceptor.init(service, 1, 1))
 	{
 		std::cerr << "Fail to acceptor.init()" << std::endl;
 		return -1;

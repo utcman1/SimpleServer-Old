@@ -16,12 +16,12 @@ void ssSession<TSessionHandler>::release()
 }
 
 template<typename TSessionHandler>
-void ssSession<TSessionHandler>::completeClose()
+void ssSession<TSessionHandler>::checkCloseComplete()
 {
 	// 이 함수는 실제 close가 진행중이 아닌 상태에서도 호출하기 때문에 assert로 검사하지 않는다.
 	if (!m_bPendingClose) return;
 
-	// ES_CLOSED 상태에서 completeClose()를 진행하는게 좀 이상하지만,
+	// ES_CLOSED 상태에서 checkCloseComplete()를 진행하는게 좀 이상하지만,
 	// ES_PENDING_CONNECT/ES_PENDING_ACCEPT 상태에서 issueClose()를 진행하면
 	// ES_ESTABLISHED 상태로 진입하지 않고 바로 ES_CLOSED 상태로 진행한다.
 	if (ES_CLOSED != m_state && ES_ESTABLISHED != m_state) return;
@@ -47,13 +47,11 @@ void ssSession<TSessionHandler>::onError(const bsErrorCode& _ec)
 template<typename TSessionHandler>
 void ssSession<TSessionHandler>::issueClose()
 {
+	// TODO : 2가지 이상의 요청이 동시에 pending된 경우
+	// 아래 assert 문은 안전한가?
+	// ex) recv / send 동시에 진행중 close된 경우
 	assert(ES_CLOSED != m_state);
-
-	if (m_bPendingClose)
-	{
-		ssERROR << "Ignore issueClose() call : PendingClose";
-		return;
-	}
+	assert(!m_bPendingClose);
 
 	m_bPendingClose = true;
 	baSocket::close();
@@ -67,10 +65,12 @@ void ssSession<TSessionHandler>::issueAccept(baAcceptor& _acceptor)
 	assert(isIdle());
 
 	m_state = ES_PENDING_ACCEPT;
+	m_sessionPool.incBacklog();
 	_acceptor.async_accept(*this,
-		[this, &_acceptor](const bsErrorCode& _ec)
+		[this](const bsErrorCode& _ec)
 		{
 			TSessionHandler& handler = this->sessionHandler();
+			this->m_sessionPool.decBacklog();
 
 			if (_ec)
 			{
@@ -79,13 +79,13 @@ void ssSession<TSessionHandler>::issueAccept(baAcceptor& _acceptor)
 			}
 			else
 			{
-				m_sessionPool.countAccept();
-				handler.onAccept();
 				this->m_state = ES_ESTABLISHED;
+				this->m_sessionPool.countAccept();
+				handler.onAccept();
 			}
 
-			this->completeClose();
-			m_sessionPool.issueAccept(_acceptor);
+			this->checkCloseComplete();
+			m_sessionPool.checkBacklog();
 		});
 }
 
@@ -96,10 +96,12 @@ void ssSession<TSessionHandler>::issueConnect(const baEndpoint& _ep)
 	assert(ssSession::isIdle());
 
 	m_state = ES_PENDING_CONNECT;
+	m_sessionPool.incBacklog();
 	baSocket::async_connect(_ep,
-		[this, &_ep](const bsErrorCode& _ec)
+		[this](const bsErrorCode& _ec)
 		{
 			TSessionHandler& handler = this->sessionHandler();
+			this->m_sessionPool.decBacklog();
 
 			if (_ec)
 			{
@@ -108,24 +110,20 @@ void ssSession<TSessionHandler>::issueConnect(const baEndpoint& _ep)
 			}
 			else
 			{
-				m_sessionPool.countConnect();
-				handler.onConnect();
 				this->m_state = ES_ESTABLISHED;
+				this->m_sessionPool.countConnect();
+				handler.onConnect();
 			}
 
-			this->completeClose();
-			m_sessionPool.issueConnect(_ep);
+			this->checkCloseComplete();
+			m_sessionPool.checkBacklog();
 		});
 }
 
 template<typename TSessionHandler>
 void ssSession<TSessionHandler>::issueRecv()
 {
-	if (ES_ESTABLISHED != m_state)
-	{
-		ssERROR << "Ignore issueRecv() call : not ES_ESTABLISHED";
-		return;
-	}
+	assert(ES_ESTABLISHED == m_state);
 
 	if (m_bPendingClose)
 	{
@@ -153,22 +151,18 @@ void ssSession<TSessionHandler>::issueRecv()
 			}
 			else
 			{
-				m_sessionPool.countRecv();
+				this->m_sessionPool.countRecv();
 				handler.onRecv(_len);
 			}
 
-			this->completeClose();
+			this->checkCloseComplete();
 		});
 }
 
 template<typename TSessionHandler>
 void ssSession<TSessionHandler>::issueSend()
 {
-	if (ES_ESTABLISHED != m_state)
-	{
-		ssERROR << "Ignore issueSend() call : not ES_ESTABLISHED";
-		return;
-	}
+	assert(ES_ESTABLISHED == m_state);
 
 	if (m_bPendingClose)
 	{
@@ -196,10 +190,10 @@ void ssSession<TSessionHandler>::issueSend()
 			}
 			else
 			{
-				m_sessionPool.countSend();
+				this->m_sessionPool.countSend();
 				handler.onSend(_len);
 			}
 
-			this->completeClose();
+			this->checkCloseComplete();
 		});
 }

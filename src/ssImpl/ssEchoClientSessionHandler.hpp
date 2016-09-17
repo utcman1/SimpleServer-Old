@@ -14,7 +14,7 @@ private:
 	ssEchoClientSessionHandler& operator=(const ssEchoClientSessionHandler&) = delete;
 
 public:
-	void onConect();
+	void onConnect();
 	void onRecv(const std::size_t _len);
 	void onSend(const std::size_t _len);
 };

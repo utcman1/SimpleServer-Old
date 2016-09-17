@@ -1,6 +1,9 @@
 ﻿template<typename TSessionHandler>
-bool ssSessionPool<TSessionHandler>::init(baIoService& _service, const std::size_t _poolSize)
+bool ssSessionPool<TSessionHandler>::init(baIoService& _service, const size_t _poolSize, const size_t _backlogMaxSize)
 {
+	m_poolSize = _poolSize;
+	m_backlogMaxSize = _backlogMaxSize;
+
 	if (!ssSessionPerfCounter::init())
 		return false;
 
@@ -22,12 +25,14 @@ bool ssSessionPool<TSessionHandler>::init(baIoService& _service, const std::size
 template<typename TSessionHandler>
 void ssSessionPool<TSessionHandler>::release()
 {
+	assert(0 == m_backlogSize);
+
 	assert(0 == m_alloc.size());
 	assert(m_free.capacity() == m_free.size());
 
 	for (ssSession* pSession : m_free)
 	{
-		free(pSession);
+		delete pSession;
 	}
 
 	m_free.clear();
@@ -62,20 +67,43 @@ ssSession<TSessionHandler>* ssSessionPool<TSessionHandler>::alloc()
 template<typename TSessionHandler>
 void ssSessionPool<TSessionHandler>::free(ssSession* _pSession)
 {
+	// _pSession이 valid한 session ptr이어야 한다.
+	assert(m_alloc.end() != std::find(m_alloc.begin(), m_alloc.end(), _pSession));
+
 	erase(m_alloc, _pSession);
 	m_free.push_back(_pSession);
+
+	ssSessionPool::checkBacklog();
 }
 
-// TODO : accept, connect에 대한 backlog 구현이 필요하다.
-// TODO : pool을 모두 소모한 상황에 대한 처리가 필요하다.
-template<typename TSessionHandler>
-void ssSessionPool<TSessionHandler>::issueAccept(baAcceptor& _acceptor)
-{
-	ssSessionPool::alloc()->issueAccept(_acceptor);
-}
+
 
 template<typename TSessionHandler>
-void ssSessionPool<TSessionHandler>::issueConnect(const baEndpoint& _ep)
+class ssAcceptor;
+
+template<typename TSessionHandler>
+class ssConnector;
+
+template<typename TSessionHandler>
+void ssSessionPool<TSessionHandler>::checkBacklog()
 {
-	ssSessionPool::alloc()->issueConnect(_ep);
+	typedef ssAcceptor<TSessionHandler> ssAcceptor;
+	typedef ssConnector<TSessionHandler> ssConnector;
+
+	while (m_backlogMaxSize > m_backlogSize)
+	{
+		ssSession* pSession = this->alloc();
+		if (nullptr == pSession) return;
+
+		switch (m_type)
+		{
+		case ET_ACCEPT:
+			pSession->issueAccept(static_cast<ssAcceptor*>(this)->getBAAcceptor());
+			break;
+
+		case ET_CONNECT:
+			pSession->issueConnect(static_cast<ssConnector*>(this)->getEndpoint());
+			break;
+		}
+	}
 }

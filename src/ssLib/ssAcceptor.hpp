@@ -12,10 +12,12 @@ private:
 
 public:
 	ssAcceptor(baIoService& _service)
-		: baAcceptor(_service)
+		: baAcceptor(_service), ssSessionPool(ssSessionPool::ET_ACCEPT)
 	{}
 
-	// init, release 인터페이스 노출
+	baAcceptor& getBAAcceptor() { return static_cast<baAcceptor&>(*this); }
+
+	// 인터페이스 노출
 	using ssSessionPool::init;
 	using ssSessionPool::release;
 

@@ -28,16 +28,9 @@ void printPerf(const std::chrono::milliseconds _duration,
 
 
 
-void ssSessionPerfCounter::setLastTick()
-{
-	m_lastTick = system_clock::now();
-}
-
-
-
 bool ssSessionPerfCounter::init()
 {
-	ssSessionPerfCounter::setLastTick();
+	m_lastTick = system_clock::now();
 
 	m_nTotalRecv = 0;
 	m_nTotalSend = 0;

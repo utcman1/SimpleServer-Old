@@ -1,12 +1,6 @@
 ﻿template<typename TSessionHandler>
 class ssSessionPool;
 
-template<typename TSessionHandler>
-class ssAcceptor;
-
-template<typename TSessionHandler>
-class ssConnector;
-
 
 
 // TODO : 효율적인 pooling을 위해서는 move constructor & move assignment operator를 정의해야 한다.
@@ -16,11 +10,9 @@ class ssSession
 {
 private:
 	typedef ssSessionPool<TSessionHandler>	ssSessionPool;
-	typedef ssAcceptor<TSessionHandler>		ssAcceptor;
-	typedef ssConnector<TSessionHandler>	ssConnector;
 
 protected:
-	// TSessionHandler에서 api를 통한 버퍼 접근 권한이 필요하다.
+	// TSessionHandler에서 버퍼 접근 권한이 필요하다.
 	ssBuffer		m_recvBuffer;
 	ssBuffer		m_sendBuffer;
 
@@ -62,7 +54,7 @@ private:
 
 	// 세션이 사용중인 상태에서 release()를 호출하는 경우 issue중인 동작이 꼬이는 문제가 발생한다. 
 	// close 과정이 완료된 이후에 release()를 진행한다.
-	void completeClose();
+	void checkCloseComplete();
 
 
 
@@ -107,7 +99,7 @@ public:
 
 	void issueClose();
 
-	// acceptor의 기능이지만 session 내부 구현에 매우 종속적이기 때문에 이곳에 구현한다.
+	// acceptor, connector의 기능이지만 session 내부 구현에 매우 종속적이기 때문에 이곳에 구현한다.
 	// 설계 측면에서도 나쁘지 않다.
 	void issueAccept(baAcceptor& _acceptor);
 	void issueConnect(const baEndpoint& _ep);

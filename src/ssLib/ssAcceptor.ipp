@@ -12,5 +12,5 @@ void ssAcceptor<TSessionHandler>::accept(const baEndpoint& _ep)
 	baAcceptor::bind(_ep);
 	baAcceptor::listen();
 
-	ssSessionPool::issueAccept(*this);
+	ssSessionPool::checkBacklog();
 }
