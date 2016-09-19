@@ -19,48 +19,68 @@ void printPerf(const std::chrono::milliseconds _duration,
 	const std::string& _totalName, const std::string& _tickName,
 	const std::size_t _nTotalCount, const std::size_t _nTickCount)
 {
-	using namespace std;
-
-	std::cout << currentDateTime() << " : [" << cout.width(4) << _duration.count() << "]ms / "
-		<< _totalName << "[" << cout.width(6) << _nTotalCount << "] / "
-		<< _tickName << "[" << cout.width(6) << _nTickCount << "]" << std::endl;
+	std::printf("%s : [%04lld]ms / %s[%06zd] / %s[%06zd]\n",
+		currentDateTime().c_str(), _duration.count(),
+		_totalName.c_str(), _nTotalCount,
+		_tickName.c_str(), _nTickCount);
 }
 
 
+
+void ssSessionPerfCounter::reserveNextTick()
+{
+	baSystemTimer::expires_at(m_lastTick + milliseconds(1000));
+
+	baSystemTimer::async_wait(
+		[this](const bsErrorCode& _ec)
+		{
+			const time_point now = system_clock::now();
+
+			if (_ec)
+			{
+				ssERROR << _ec.message();
+			}
+			else
+			{
+				this->onTick(now);
+			}
+
+			this->m_lastTick += milliseconds(1000);
+			this->reserveNextTick();
+		});
+}
 
 bool ssSessionPerfCounter::init()
 {
 	m_lastTick = system_clock::now();
+	ssSessionPerfCounter::reserveNextTick();
 
+	m_nTotalAcpt = 0;
+	m_nTotalConn = 0;
 	m_nTotalRecv = 0;
 	m_nTotalSend = 0;
-	m_nTotalConn = 0;
-	m_nTotalAcpt = 0;
 
+	m_nTickAcpt = 0;
+	m_nTickConn = 0;
 	m_nTickRecv = 0;
 	m_nTickSend = 0;
-	m_nTickConn = 0;
-	m_nTickAcpt = 0;
 
 	return true;
 }
 
-void ssSessionPerfCounter::onTick()
+void ssSessionPerfCounter::onTick(const time_point& _now)
 {
 	using namespace std::chrono;
 
-	const time_point now = system_clock::now();
-	const auto msDuration = duration_cast<milliseconds>(now - m_lastTick);
+	const auto msDuration = duration_cast<milliseconds>(_now - m_lastTick);
 
+	if (0 < m_nTickAcpt) printPerf(msDuration, "totalAcpt", "tickAcpt", m_nTotalAcpt, m_nTickAcpt);
+	if (0 < m_nTickConn) printPerf(msDuration, "totalConn", "tickConn", m_nTotalConn, m_nTickConn);
 	if (0 < m_nTickRecv) printPerf(msDuration, "totalRecv", "tickRecv", m_nTotalRecv, m_nTickRecv);
 	if (0 < m_nTickSend) printPerf(msDuration, "totalSend", "tickSend", m_nTotalSend, m_nTickSend);
-	if (0 < m_nTickConn) printPerf(msDuration, "totalConn", "tickConn", m_nTotalConn, m_nTickConn);
-	if (0 < m_nTickAcpt) printPerf(msDuration, "totalAcpt", "tickAcpt", m_nTotalAcpt, m_nTickAcpt);
 
+	m_nTickAcpt = 0;
+	m_nTickConn = 0;
 	m_nTickRecv = 0;
 	m_nTickSend = 0;
-	m_nTickConn = 0;
-	m_nTickAcpt = 0;
-
-	m_lastTick = now;
 }

@@ -50,6 +50,7 @@ private:
 	bool isIdle() { return (!m_bPendingClose && !m_bPendingRecv && !m_bPendingSend); }
 
 	// release()는 CLOSED 상태일때만 호출한다.
+	// release() 호출은 항상 ssSession 내부에서 하기 때문에 private로 설정한다.
 	void release();
 
 	// 세션이 사용중인 상태에서 release()를 호출하는 경우 issue중인 동작이 꼬이는 문제가 발생한다. 
@@ -92,8 +93,8 @@ private:
 
 
 public:
-	ssSession(baIoService& _service, ssSessionPool& _sessionPool)
-		: baSocket(_service), m_sessionPool(_sessionPool) {}
+	ssSession(baIoService& _ioService, ssSessionPool& _sessionPool)
+		: baSocket(_ioService), m_sessionPool(_sessionPool) {}
 
 	bool init() { return sessionHandler().onInit(); }
 

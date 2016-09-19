@@ -11,8 +11,8 @@ private:
 	ssAcceptor& operator=(const ssAcceptor&) = delete;
 
 public:
-	ssAcceptor(baIoService& _service)
-		: baAcceptor(_service), ssSessionPool(ssSessionPool::ET_ACCEPT)
+	ssAcceptor(baIoService& _ioService)
+		: baAcceptor(_ioService), ssSessionPool(_ioService, ssSessionPool::ET_ACCEPT)
 	{}
 
 	baAcceptor& getBAAcceptor() { return static_cast<baAcceptor&>(*this); }

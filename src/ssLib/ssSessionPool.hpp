@@ -14,8 +14,8 @@ protected:
 	} m_type;
 
 private:
-	size_t m_poolSize;
-	size_t m_backlogMaxSize;
+	size_t m_poolSize = 0;
+	size_t m_backlogMaxSize = 0;
 	size_t m_backlogSize = 0;
 
 	// TODO : 효율적인 pool 구현을 고민해야 한다.
@@ -24,18 +24,26 @@ private:
 	std::vector<ssSession*> m_free;
 	std::vector<ssSession*> m_alloc;
 
-public:
-	ssSessionPool(const EType _type)
-		: m_type(_type) {}
+private:
+	// delete copy constructor, assignment operator
+	ssSessionPool(const ssSessionPool&) = delete;
+	ssSessionPool& operator=(const ssSessionPool&) = delete;
 
-	bool init(baIoService& _service, const size_t _poolSize, const size_t _backlogMaxSize);
+private:
+	ssSession* alloc();
+	void issueBacklog(ssSession* _pSession);
+
+protected:
+	void checkBacklog();
+
+public:
+	ssSessionPool(baIoService& _ioService, const EType _type)
+		: ssSessionPerfCounter(_ioService), m_type(_type) {}
+
+	bool init(const size_t _poolSize, const size_t _backlogMaxSize);
 	void release();
 	void close();
 
-	ssSession* alloc();
 	void free(ssSession* _pSession);
-
-	void incBacklog() { ++m_backlogSize; }
-	void decBacklog() { --m_backlogSize; }
-	void checkBacklog();
+	void completeBacklog();
 };

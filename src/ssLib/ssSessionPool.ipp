@@ -1,18 +1,75 @@
 ﻿template<typename TSessionHandler>
-bool ssSessionPool<TSessionHandler>::init(baIoService& _service, const size_t _poolSize, const size_t _backlogMaxSize)
+ssSession<TSessionHandler>* ssSessionPool<TSessionHandler>::alloc()
 {
-	m_poolSize = _poolSize;
-	m_backlogMaxSize = _backlogMaxSize;
+	if (0 == m_free.size())
+		return nullptr;
 
+	ssSession* pSession = m_free.back();
+	m_free.pop_back();
+	pSession->init();
+	m_alloc.push_back(pSession);
+	return pSession;
+}
+
+template<typename TSessionHandler>
+class ssAcceptor;
+
+template<typename TSessionHandler>
+class ssConnector;
+
+template<typename TSessionHandler>
+void ssSessionPool<TSessionHandler>::issueBacklog(ssSession* _pSession)
+{
+	++m_backlogSize;
+
+	typedef ssAcceptor<TSessionHandler> ssAcceptor;
+	typedef ssConnector<TSessionHandler> ssConnector;
+
+	switch (m_type)
+	{
+	case ET_ACCEPT:
+		_pSession->issueAccept(static_cast<ssAcceptor*>(this)->getBAAcceptor());
+		break;
+
+	case ET_CONNECT:
+		_pSession->issueConnect(static_cast<ssConnector*>(this)->getEndpoint());
+		break;
+	}
+}
+
+
+
+template<typename TSessionHandler>
+void ssSessionPool<TSessionHandler>::checkBacklog()
+{
+	while (m_backlogMaxSize > m_backlogSize)
+	{
+		ssSession* pSession = this->alloc();
+		if (nullptr == pSession) return;
+
+		ssSessionPool::issueBacklog(pSession);
+	}
+}
+
+
+
+template<typename TSessionHandler>
+bool ssSessionPool<TSessionHandler>::init(const size_t _poolSize, const size_t _backlogMaxSize)
+{
 	if (!ssSessionPerfCounter::init())
 		return false;
+
+	m_poolSize = _poolSize;
+	m_backlogMaxSize = _backlogMaxSize;
 
 	m_free.reserve(_poolSize);
 	m_alloc.reserve(_poolSize);
 
+	baIoService& ioService = baSystemTimer::get_io_service();
+
 	for (std::size_t i = 0; _poolSize > i; ++i)
 	{
-		ssSession* pSession = new ssSession(_service, *this);
+		ssSession* pSession = new ssSession(ioService, *this);
 		if (!pSession->init())
 			return false;
 
@@ -49,21 +106,6 @@ void ssSessionPool<TSessionHandler>::close()
 	}
 }
 
-
-
-template<typename TSessionHandler>
-ssSession<TSessionHandler>* ssSessionPool<TSessionHandler>::alloc()
-{
-	if (0 == m_free.size())
-		return nullptr;
-
-	ssSession* pSession = m_free.back();
-	m_free.pop_back();
-	pSession->init();
-	m_alloc.push_back(pSession);
-	return pSession;
-}
-
 template<typename TSessionHandler>
 void ssSessionPool<TSessionHandler>::free(ssSession* _pSession)
 {
@@ -76,34 +118,10 @@ void ssSessionPool<TSessionHandler>::free(ssSession* _pSession)
 	ssSessionPool::checkBacklog();
 }
 
-
-
 template<typename TSessionHandler>
-class ssAcceptor;
-
-template<typename TSessionHandler>
-class ssConnector;
-
-template<typename TSessionHandler>
-void ssSessionPool<TSessionHandler>::checkBacklog()
+void ssSessionPool<TSessionHandler>::completeBacklog()
 {
-	typedef ssAcceptor<TSessionHandler> ssAcceptor;
-	typedef ssConnector<TSessionHandler> ssConnector;
+	--m_backlogSize;
 
-	while (m_backlogMaxSize > m_backlogSize)
-	{
-		ssSession* pSession = this->alloc();
-		if (nullptr == pSession) return;
-
-		switch (m_type)
-		{
-		case ET_ACCEPT:
-			pSession->issueAccept(static_cast<ssAcceptor*>(this)->getBAAcceptor());
-			break;
-
-		case ET_CONNECT:
-			pSession->issueConnect(static_cast<ssConnector*>(this)->getEndpoint());
-			break;
-		}
-	}
+	ssSessionPool::checkBacklog();
 }

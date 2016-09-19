@@ -14,8 +14,8 @@ private:
 	ssConnector& operator=(const ssConnector&) = delete;
 
 public:
-	ssConnector()
-		: ssSessionPool(ssSessionPool::ET_CONNECT) {}
+	ssConnector(baIoService& _ioService)
+		: ssSessionPool(_ioService, ssSessionPool::ET_CONNECT) {}
 
 	const baEndpoint& getEndpoint() const { return m_ep; }
 

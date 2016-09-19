@@ -65,12 +65,10 @@ void ssSession<TSessionHandler>::issueAccept(baAcceptor& _acceptor)
 	assert(isIdle());
 
 	m_state = ES_PENDING_ACCEPT;
-	m_sessionPool.incBacklog();
 	_acceptor.async_accept(*this,
 		[this](const bsErrorCode& _ec)
 		{
 			TSessionHandler& handler = this->sessionHandler();
-			this->m_sessionPool.decBacklog();
 
 			if (_ec)
 			{
@@ -85,7 +83,7 @@ void ssSession<TSessionHandler>::issueAccept(baAcceptor& _acceptor)
 			}
 
 			this->checkCloseComplete();
-			m_sessionPool.checkBacklog();
+			m_sessionPool.completeBacklog();
 		});
 }
 
@@ -96,12 +94,10 @@ void ssSession<TSessionHandler>::issueConnect(const baEndpoint& _ep)
 	assert(ssSession::isIdle());
 
 	m_state = ES_PENDING_CONNECT;
-	m_sessionPool.incBacklog();
 	baSocket::async_connect(_ep,
 		[this](const bsErrorCode& _ec)
 		{
 			TSessionHandler& handler = this->sessionHandler();
-			this->m_sessionPool.decBacklog();
 
 			if (_ec)
 			{
@@ -116,7 +112,7 @@ void ssSession<TSessionHandler>::issueConnect(const baEndpoint& _ep)
 			}
 
 			this->checkCloseComplete();
-			m_sessionPool.checkBacklog();
+			m_sessionPool.completeBacklog();
 		});
 }
 

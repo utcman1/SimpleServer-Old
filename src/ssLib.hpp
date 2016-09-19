@@ -5,6 +5,7 @@
 typedef boost::asio::const_buffers_1		baConstBuffer;
 typedef boost::asio::mutable_buffers_1		baMutableBuffer;
 typedef boost::asio::io_service				baIoService;
+typedef boost::asio::system_timer			baSystemTimer;
 typedef boost::asio::ip::address			baAddr;
 typedef boost::asio::ip::tcp				baTcp;
 typedef boost::asio::ip::tcp::acceptor		baAcceptor;
