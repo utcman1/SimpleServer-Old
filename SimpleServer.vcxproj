@@ -42,7 +42,9 @@
     <None Include="src\ssLib\ssSessionPool.ipp" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="TODO.txt" />
+    <Text Include="doc\DONE.txt" />
+    <Text Include="doc\TODO.txt" />
+    <Text Include="doc\resource\2016-07-17_aws_net_perf.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

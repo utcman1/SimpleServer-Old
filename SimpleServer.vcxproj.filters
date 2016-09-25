@@ -11,6 +11,12 @@
     <Filter Include="src\ssImpl">
       <UniqueIdentifier>{f13f3567-c5e2-4984-ae81-56db18ac377c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="doc">
+      <UniqueIdentifier>{d5868789-2fca-4dd9-9034-4e58b592bebc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="doc\resource">
+      <UniqueIdentifier>{0957898b-89e6-46df-83a2-67ba9578986e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\SimpleServer.cpp">
@@ -83,6 +89,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Text Include="TODO.txt" />
+    <Text Include="doc\DONE.txt">
+      <Filter>doc</Filter>
+    </Text>
+    <Text Include="doc\TODO.txt">
+      <Filter>doc</Filter>
+    </Text>
+    <Text Include="doc\resource\2016-07-17_aws_net_perf.txt">
+      <Filter>doc\resource</Filter>
+    </Text>
   </ItemGroup>
 </Project>

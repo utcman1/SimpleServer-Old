@@ -1,0 +1,79 @@
+2016-07-17
+	https://access.redhat.com/documentation/en-US/Red_Hat_Enterprise_Linux/7/html/Performance_Tuning_Guide/sect-Red_Hat_Enterprise_Linux-Performance_Tuning_Guide-Networking-Configuration_tools.html#sect-Red_Hat_Enterprise_Linux-Performance_Tuning_Guide-Configuration_tools-Configuring_Receive_Side_Scaling_RSS
+	http://highscalability.com/blog/2014/8/18/1-aerospike-server-x-1-amazon-ec2-instance-1-million-tps-for.html
+	http://datacratic.com/site/blog/1m-qps-nginx-and-ubuntu-1204-ec2
+
+	amazon ec2 C4. 인스턴스 네트웍 성능 테스트
+	traffic / pps 양쪽 모두 limit이 걸려있음.
+	rx / tx 모두 제한이 있음(대역폭 높은 머신 - 낮은 머신간 트래픽은 낮은 머신 기준으로 제한됨)
+	대역폭 측정 : iperf3
+	PPS 측정	: redis-3.2.1
+
+	C4.large(1c / 2t)		:   620	Mbits/sec		50K PPS		50K PPS * 1500 Byte/Packet * 8 bit/Byte = 600Mbps
+	C4.xlarge(2c / 4t)		:  1.25	Gbits/sec		75K PPS(?)
+	C4.2xlarge(4c / 8t)		:  2.50	Gbits/sec		200K PPS
+							: application single core 처리 능력 한계. server, client 모두 100%에 육박함.
+							: redis server / client의 cpu affinity를 network interrupt를 처리하는 core와 겹치도록 하면 single redis instance로는 200Kpps 확보가 불가능하다.
+	C4.4xlarge(8c / 16t)	:  5.00	Gbits/sec		400K PPS
+							: 정확한 원인은 못찾았지만 single instance의 성능이 200K PPS가 안나온다.
+							: 4 instance로 100K PPS * 4 = 400K PPS 달성
+	C4.8xlarge(18c / 36t)	:  9.50 Gbits/sec		400K PPS(??)
+							: 성능이 안나온다.
+
+	네트워크 성능 향상 시도
+	1. sr-iov
+	   가상 머신과 network interface간 직접 통신.
+	   C4.* + amazon linux 를 사용하면 기본적으로 적용되어 있다.
+
+	2. interrupt throttling
+	   현대 세대의 network interface는 매 패킷마다 interrupt를 발생하지 않는다.
+	   interrupt 발생 빈도를 control.
+	   amazon linux 를 사용하면 InterruptThrottleRate=1 : dynamic mode 가 적용되어 있다.
+
+	3. RSS (Receive-Side Scaling)
+	   interrupt를 하나의 코어가 아닌 여러개의 코어에서 분산 처리
+	   ixgbevf 드라이버는 2개의 채널만 지원하고, 기본적으로 분산되어 있는 상태
+	   /proc/irq/*/smp_affinity 설정으로 컨트롤
+	   실제 interrupt 처리 stat은 /proc/interrupts로 확인 가능
+
+	4. RPS (Receive Packet Steering)
+	   interrupt 분산은 driver에 종속적이기 때문에 제한이 있음.
+	   커널에서 패킷 처리하는 실제 핸들러는 driver와 무관하게 컨트롤 가능함.
+	   /sys/class/net/eth0/queues/rx-0/rps_cpus 로 컨트롤
+
+	   ※ RSS, RPS 설정시 numa layout을 고려해서 하는 것이 효율적이라고 함.
+
+	[ec2-user@ip-10-0-100-101 src]$ numactl --hardware
+	available: 2 nodes (0-1)
+	node 0 cpus: 0 1 2 3 4 5 6 7 8 18 19 20 21 22 23 24 25 26
+	node 0 size: 29793 MB
+	node 0 free: 29484 MB
+	node 1 cpus: 9 10 11 12 13 14 15 16 17 27 28 29 30 31 32 33 34 35
+	node 1 size: 30594 MB
+	node 1 free: 30464 MB
+	node distances:
+	node   0   1
+	  0:  10  20
+	  1:  20  10
+
+	node 0 : core 0 ~ 8 : 9개
+	node 1 : core 9 ~ 17 : 9개
+
+	eth0-TxRx-0는 core 0
+	eth0-TxRx-1는 core 9에 interrupt handler 배치
+
+	각각의 패킷 핸들러는 1-8, 10-17에 배치
+
+	# Set CPU affinity of the interrupts to CPU0 and CPU16:
+	echo '00000000,00000001' > /proc/irq/266/smp_affinity
+	echo '00000000,00000200' > /proc/irq/267/smp_affinity
+ 
+	# Set RPS for 7 CPUs in the same NUMA domain as the interrupt CPU
+	echo '00000000,000001fe' > /sys/class/net/eth0/queues/rx-0/rps_cpus
+	echo '00000000,0003fc00' > /sys/class/net/eth0/queues/rx-1/rps_cpus
+
+	5. Network Interface 추가
+	   RSS, RPS 보다 직접적인 효과.
+
+	6. Network driver version up
+	   최신 버전 driver로 버전 업

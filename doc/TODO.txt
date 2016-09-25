@@ -1,0 +1,12 @@
+﻿1. acceptor
+	클라 접속에 대비해서 서버로 동작. session pool이 종속 자원으로 필요.
+	동시에 1개 이상의 "주소"에 대해 서비스 할 수 있다.
+	1개 이상의 주소에 대응할 경우에도 session pool은 공유가 가능하다.
+	=> 일단은 1개 이상의 주소에 대응하는 경우는 무시한다. 추후 기능 확장시 작업.
+
+	독립 적인 서비스를 제공하는 경우 ex) 채팅 서버 & 게임 서버, 독립 적인 acceptor & 세션풀을 가져야 할 수 있다.
+	설계 목표는 symmetric한 구성을 고려하고 있기 때문에 여러개의 acceptor 패턴을 고려하고 있지 않다.
+	단일 acceptor위에 논리적인 서비스를 얹는 방향으로 구현한다.
+
+	TODO : accept 속도를 위해 accept pool을 유지해야 하는지 성능 테스트가 필요하다.
+		   single accept backlog는 response time 이슈로 throughput이 부족할 수 있다.
