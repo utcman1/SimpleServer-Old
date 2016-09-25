@@ -1,5 +1,4 @@
 ﻿class ssSessionPerfCounter
-	: protected baSystemTimer
 {
 private:
 	typedef std::chrono::milliseconds milliseconds;
@@ -8,6 +7,7 @@ private:
 	typedef std::size_t size_t;
 
 private:
+	baSystemTimer m_timer;
 	time_point m_lastTick = time_point::max();
 
 	size_t m_nTotalAcpt = 0;
@@ -30,7 +30,7 @@ private:
 
 public:
 	ssSessionPerfCounter(baIoService& _ioService)
-		: baSystemTimer(_ioService) {}
+		: m_timer(_ioService) {}
 
 	bool init();
 	void release() {}

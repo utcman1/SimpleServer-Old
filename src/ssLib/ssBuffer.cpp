@@ -30,6 +30,7 @@ void ssBuffer::completePush(const size_t _len)
 
 void ssBuffer::push(const char* _src, const size_t _len)
 {
+	assert(size() + _len <= capacity());
 	memcpy(nextPtr(), _src, _len);
 	completePush(_len);
 }

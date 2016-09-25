@@ -65,11 +65,9 @@ bool ssSessionPool<TSessionHandler>::init(const size_t _poolSize, const size_t _
 	m_free.reserve(_poolSize);
 	m_alloc.reserve(_poolSize);
 
-	baIoService& ioService = baSystemTimer::get_io_service();
-
 	for (std::size_t i = 0; _poolSize > i; ++i)
 	{
-		ssSession* pSession = new ssSession(ioService, *this);
+		ssSession* pSession = new ssSession(m_ioService, *this);
 		if (!pSession->init())
 			return false;
 

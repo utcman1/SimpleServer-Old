@@ -6,7 +6,6 @@ class ssSessionPool;
 // TODO : 효율적인 pooling을 위해서는 move constructor & move assignment operator를 정의해야 한다.
 template<typename TSessionHandler>
 class ssSession
-	: private baSocket
 {
 private:
 	typedef ssSessionPool<TSessionHandler>	ssSessionPool;
@@ -17,6 +16,7 @@ protected:
 	ssBuffer		m_sendBuffer;
 
 private:
+	baSocket		m_socket;
 	ssSessionPool&	m_sessionPool;
 
 	enum EState : uint8_t
@@ -94,7 +94,7 @@ private:
 
 public:
 	ssSession(baIoService& _ioService, ssSessionPool& _sessionPool)
-		: baSocket(_ioService), m_sessionPool(_sessionPool) {}
+		: m_socket(_ioService), m_sessionPool(_sessionPool) {}
 
 	bool init() { return sessionHandler().onInit(); }
 

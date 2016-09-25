@@ -1,4 +1,8 @@
-﻿// TODO : circular buffer로 변환이 필요하다.
+﻿// TODO : circular buffer 도입하자.
+// TODO : buffer block을 단일 block이 아닌
+//			작은 block(64 byte) : 높은 빈도로 사용됨. class에 직접 포함.
+//			큰 block(64K byte) : 낮은 빈도로 사용됨. 외부의 메모리 풀을 사용.
+//			2단계로 구성해서 작은 block의 경우 메모리 사용 효율을 높일 수 있도록 구성하자.
 
 
 

@@ -50,11 +50,12 @@ void ssSession<TSessionHandler>::issueClose()
 	// TODO : 2가지 이상의 요청이 동시에 pending된 경우
 	// 아래 assert 문은 안전한가?
 	// ex) recv / send 동시에 진행중 close된 경우
+	//		error가 2번 전파된다.
 	assert(ES_CLOSED != m_state);
 	assert(!m_bPendingClose);
 
 	m_bPendingClose = true;
-	baSocket::close();
+	m_socket.close();
 	sessionHandler().onClosing();
 }
 
@@ -65,7 +66,7 @@ void ssSession<TSessionHandler>::issueAccept(baAcceptor& _acceptor)
 	assert(isIdle());
 
 	m_state = ES_PENDING_ACCEPT;
-	_acceptor.async_accept(*this,
+	_acceptor.async_accept(m_socket,
 		[this](const bsErrorCode& _ec)
 		{
 			TSessionHandler& handler = this->sessionHandler();
@@ -94,7 +95,7 @@ void ssSession<TSessionHandler>::issueConnect(const baEndpoint& _ep)
 	assert(ssSession::isIdle());
 
 	m_state = ES_PENDING_CONNECT;
-	baSocket::async_connect(_ep,
+	m_socket.async_connect(_ep,
 		[this](const bsErrorCode& _ec)
 		{
 			TSessionHandler& handler = this->sessionHandler();
@@ -134,7 +135,7 @@ void ssSession<TSessionHandler>::issueRecv()
 	}
 
 	m_bPendingRecv = true;
-	baSocket::async_read_some(m_recvBuffer.toMutableBuffer(),
+	m_socket.async_read_some(m_recvBuffer.toMutableBuffer(),
 		[this](const bsErrorCode& _ec, std::size_t _len)
 		{
 			m_bPendingRecv = false;
@@ -173,7 +174,7 @@ void ssSession<TSessionHandler>::issueSend()
 	}
 
 	m_bPendingSend = true;
-	baSocket::async_write_some(m_sendBuffer.toConstbuffer(),
+	m_socket.async_write_some(m_sendBuffer.toConstbuffer(),
 		[this](const bsErrorCode& _ec, std::size_t _len)
 		{
 			m_bPendingSend = false;

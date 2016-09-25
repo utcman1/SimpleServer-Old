@@ -29,9 +29,9 @@ void printPerf(const std::chrono::milliseconds _duration,
 
 void ssSessionPerfCounter::reserveNextTick()
 {
-	baSystemTimer::expires_at(m_lastTick + milliseconds(1000));
+	m_timer.expires_at(m_lastTick + milliseconds(1000));
 
-	baSystemTimer::async_wait(
+	m_timer.async_wait(
 		[this](const bsErrorCode& _ec)
 		{
 			const time_point now = system_clock::now();
