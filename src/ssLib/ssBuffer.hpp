@@ -18,7 +18,7 @@ private:
 	char	m_buffer[EC_Capacity];
 
 private:
-	char* ssBuffer::nextPtr();
+	char* nextPtr();
 
 public:
 	// Capacity
