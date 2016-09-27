@@ -15,7 +15,7 @@ public:
 		: baAcceptor(_ioService), tSessionPool(_ioService, tSessionPool::ET_ACCEPT)
 	{}
 
-	baAcceptor& getBAAcceptor() { return static_cast<baAcceptor&>(*this); }
+	static baAcceptor& getBAAcceptor(tSessionPool* _pSessionPool);
 
 	// 인터페이스 노출
 	using tSessionPool::init;

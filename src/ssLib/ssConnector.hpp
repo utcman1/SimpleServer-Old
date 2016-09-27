@@ -17,7 +17,7 @@ public:
 	ssConnector(baIoService& _ioService)
 		: tSessionPool(_ioService, tSessionPool::ET_CONNECT) {}
 
-	const baEndpoint& getEndpoint() const { return m_ep; }
+	static const baEndpoint& getEndpoint(tSessionPool* _pSessionPool);
 
 	// 인터페이스 노출
 	using tSessionPool::init;

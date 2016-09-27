@@ -22,17 +22,17 @@ void ssSessionPool<TSessionHandler>::issueBacklog(tSession* _pSession)
 {
 	++m_backlogSize;
 
-	typedef ssAcceptor<TSessionHandler> ssAcceptor;
-	typedef ssConnector<TSessionHandler> ssConnector;
+	typedef ssAcceptor<TSessionHandler> tAcceptor;
+	typedef ssConnector<TSessionHandler> tConnector;
 
 	switch (m_type)
 	{
 	case ET_ACCEPT:
-		_pSession->issueAccept(static_cast<ssAcceptor*>(this)->getBAAcceptor());
+		_pSession->issueAccept(tAcceptor::getBAAcceptor(this));
 		break;
 
 	case ET_CONNECT:
-		_pSession->issueConnect(static_cast<ssConnector*>(this)->getEndpoint());
+		_pSession->issueConnect(tConnector::getEndpoint(this));
 		break;
 	}
 }

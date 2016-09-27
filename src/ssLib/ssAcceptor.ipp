@@ -1,4 +1,10 @@
 ﻿template<typename TSessionHandler>
+baAcceptor& ssAcceptor<TSessionHandler>::getBAAcceptor(tSessionPool* _pSessionPool)
+{
+	return static_cast<baAcceptor&>(static_cast<ssAcceptor&>(*_pSessionPool));
+}
+
+template<typename TSessionHandler>
 void ssAcceptor<TSessionHandler>::close()
 {
 	baAcceptor::close();
