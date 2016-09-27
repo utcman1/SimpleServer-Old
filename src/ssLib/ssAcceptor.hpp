@@ -3,7 +3,7 @@ class ssAcceptor
 	: private baAcceptor, private ssSessionPool<TSessionHandler>
 {
 private:
-	typedef ssSessionPool<TSessionHandler> ssSessionPool;
+	typedef ssSessionPool<TSessionHandler> tSessionPool;
 
 private:
 	// delete copy constructor, assignment operator
@@ -12,14 +12,14 @@ private:
 
 public:
 	ssAcceptor(baIoService& _ioService)
-		: baAcceptor(_ioService), ssSessionPool(_ioService, ssSessionPool::ET_ACCEPT)
+		: baAcceptor(_ioService), tSessionPool(_ioService, tSessionPool::ET_ACCEPT)
 	{}
 
 	baAcceptor& getBAAcceptor() { return static_cast<baAcceptor&>(*this); }
 
 	// 인터페이스 노출
-	using ssSessionPool::init;
-	using ssSessionPool::release;
+	using tSessionPool::init;
+	using tSessionPool::release;
 
 	void close();
 	void accept(const baEndpoint& _ep);		// throw accept exception

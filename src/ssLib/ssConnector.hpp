@@ -3,7 +3,7 @@ class ssConnector
 	: private ssSessionPool<TSessionHandler>
 {
 private:
-	typedef ssSessionPool<TSessionHandler> ssSessionPool;
+	typedef ssSessionPool<TSessionHandler> tSessionPool;
 
 private:
 	baEndpoint m_ep;
@@ -15,14 +15,14 @@ private:
 
 public:
 	ssConnector(baIoService& _ioService)
-		: ssSessionPool(_ioService, ssSessionPool::ET_CONNECT) {}
+		: tSessionPool(_ioService, tSessionPool::ET_CONNECT) {}
 
 	const baEndpoint& getEndpoint() const { return m_ep; }
 
 	// 인터페이스 노출
-	using ssSessionPool::init;
-	using ssSessionPool::release;
-	using ssSessionPool::close;
+	using tSessionPool::init;
+	using tSessionPool::release;
+	using tSessionPool::close;
 
 	void connect(const baEndpoint& _ep);
 };

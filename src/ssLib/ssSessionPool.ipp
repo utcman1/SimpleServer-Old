@@ -4,7 +4,7 @@ ssSession<TSessionHandler>* ssSessionPool<TSessionHandler>::alloc()
 	if (0 == m_free.size())
 		return nullptr;
 
-	ssSession* pSession = m_free.back();
+	tSession* pSession = m_free.back();
 	m_free.pop_back();
 	pSession->init();
 	m_alloc.push_back(pSession);
@@ -18,7 +18,7 @@ template<typename TSessionHandler>
 class ssConnector;
 
 template<typename TSessionHandler>
-void ssSessionPool<TSessionHandler>::issueBacklog(ssSession* _pSession)
+void ssSessionPool<TSessionHandler>::issueBacklog(tSession* _pSession)
 {
 	++m_backlogSize;
 
@@ -44,7 +44,7 @@ void ssSessionPool<TSessionHandler>::checkBacklog()
 {
 	while (m_backlogMaxSize > m_backlogSize)
 	{
-		ssSession* pSession = this->alloc();
+		tSession* pSession = this->alloc();
 		if (nullptr == pSession) return;
 
 		ssSessionPool::issueBacklog(pSession);
@@ -67,7 +67,7 @@ bool ssSessionPool<TSessionHandler>::init(const size_t _poolSize, const size_t _
 
 	for (std::size_t i = 0; _poolSize > i; ++i)
 	{
-		ssSession* pSession = new ssSession(m_ioService, *this);
+		tSession* pSession = new tSession(m_ioService, *this);
 		if (!pSession->init())
 			return false;
 
@@ -85,7 +85,7 @@ void ssSessionPool<TSessionHandler>::release()
 	assert(0 == m_alloc.size());
 	assert(m_free.capacity() == m_free.size());
 
-	for (ssSession* pSession : m_free)
+	for (tSession* pSession : m_free)
 	{
 		delete pSession;
 	}
@@ -98,14 +98,14 @@ void ssSessionPool<TSessionHandler>::release()
 template<typename TSessionHandler>
 void ssSessionPool<TSessionHandler>::close()
 {
-	for (ssSession* pSession : m_alloc)
+	for (tSession* pSession : m_alloc)
 	{
 		pSession->issueClose();
 	}
 }
 
 template<typename TSessionHandler>
-void ssSessionPool<TSessionHandler>::free(ssSession* _pSession)
+void ssSessionPool<TSessionHandler>::free(tSession* _pSession)
 {
 	// _pSession이 valid한 session ptr이어야 한다.
 	assert(m_alloc.end() != std::find(m_alloc.begin(), m_alloc.end(), _pSession));

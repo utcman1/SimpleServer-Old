@@ -8,7 +8,7 @@ template<typename TSessionHandler>
 class ssSession
 {
 private:
-	typedef ssSessionPool<TSessionHandler>	ssSessionPool;
+	typedef ssSessionPool<TSessionHandler>	tSessionPool;
 
 protected:
 	// TSessionHandler에서 버퍼 접근 권한이 필요하다.
@@ -17,7 +17,7 @@ protected:
 
 private:
 	baSocket		m_socket;
-	ssSessionPool&	m_sessionPool;
+	tSessionPool&	m_sessionPool;
 
 	enum EState : uint8_t
 	{
@@ -93,7 +93,7 @@ private:
 
 
 public:
-	ssSession(baIoService& _ioService, ssSessionPool& _sessionPool)
+	ssSession(baIoService& _ioService, tSessionPool& _sessionPool)
 		: m_socket(_ioService), m_sessionPool(_sessionPool) {}
 
 	bool init() { return sessionHandler().onInit(); }

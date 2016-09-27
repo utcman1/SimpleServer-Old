@@ -2,7 +2,7 @@
 	: public ssSession<ssEchoClientSessionHandler>
 {
 private:
-	typedef ssSession<ssEchoClientSessionHandler> ssSession;
+	typedef ssSession<ssEchoClientSessionHandler> tSession;
 
 private:
 	// constructor
