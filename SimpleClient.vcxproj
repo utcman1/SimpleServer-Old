@@ -19,6 +19,7 @@
     <ClCompile Include="src\ssImpl\ssEchoClientSessionHandler.cpp" />
     <ClCompile Include="src\ssLib\ssBuffer.cpp" />
     <ClCompile Include="src\ssLib\ssSessionPerfCounter.cpp" />
+    <ClCompile Include="src\ssLib\ssUtil.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\stdafx.hpp" />

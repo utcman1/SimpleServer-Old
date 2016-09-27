@@ -3,24 +3,12 @@
 
 
 
-// TODO : c++ 스타일로 정리하자
-const std::string currentDateTime()
-{
-	time_t     now = time(0);
-	struct tm  tstruct;
-	char       buf[80];
-	localtime_s(&tstruct, &now);
-	strftime(buf, sizeof(buf), "%Y-%m-%d %X", &tstruct);
-
-	return buf;
-}
-
 void printPerf(const std::chrono::milliseconds _duration,
 	const std::string& _totalName, const std::string& _tickName,
 	const std::size_t _nTotalCount, const std::size_t _nTickCount)
 {
-	std::printf("%s : [%04lld]ms / %s[%06zd] / %s[%06zd]\n",
-		currentDateTime().c_str(), _duration.count(),
+	std::printf("%s : [%04" PRId64 "]ms / %s[%06zd] / %s[%06zd]\n",
+		getLocalTime().c_str(), _duration.count(),
 		_totalName.c_str(), _nTotalCount,
 		_tickName.c_str(), _nTickCount);
 }

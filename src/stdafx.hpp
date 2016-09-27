@@ -4,6 +4,7 @@
 #pragma warning(disable : 4548)
 #include <assert.h>
 #include <algorithm>
+#include <cinttypes>
 #include <cstdio>
 #include <chrono>
 #include <iostream>
