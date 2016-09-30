@@ -1,7 +1,15 @@
-﻿/.vs
+﻿###############################################################################
+# windows
+/.vs
 /ipch
+/Debug
+/Release
 /*.VC.db
 /*.VC.opendb
 /*.vcxproj.user
-Debug
-Release
+
+###############################################################################
+# linux
+/obj
+/SimpleServer
+/SimpleClient
