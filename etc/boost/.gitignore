@@ -1,0 +1,12 @@
+/bin.v2/
+/libs/config/checks/architecture/bin/
+/stage64/
+/tools/build/src/engine/bootstrap/
+/tools/build/src/engine/bin.ntx86/
+/tools/build/src/engine/bin.linuxx86_64/
+/b2
+/b2.exe
+/bjam
+/bjam.exe
+/bootstrap.log
+/project-config.jam
