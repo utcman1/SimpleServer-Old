@@ -38,6 +38,12 @@
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="Makefile" />
+    <None Include="etc\boost\.gitignore" />
+    <None Include="etc\boost\build.bat" />
+    <None Include="etc\boost\build.sh" />
+    <None Include="etc\mysql\.gitignore" />
+    <None Include="etc\mysql\build.bat" />
+    <None Include="etc\mysql\build.sh" />
     <None Include="src\ssLib\ssAcceptor.ipp" />
     <None Include="src\ssLib\ssConnector.ipp" />
     <None Include="src\ssLib\ssSession.ipp" />

@@ -11,6 +11,15 @@
     <Filter Include="src\ssImpl">
       <UniqueIdentifier>{f13f3567-c5e2-4984-ae81-56db18ac377c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="etc">
+      <UniqueIdentifier>{feba74ad-3d92-487b-932a-93ff5d7805d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="etc\boost">
+      <UniqueIdentifier>{ffb518d8-b294-47cb-ab5e-e602968e959b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="etc\mysql">
+      <UniqueIdentifier>{94c4eb75-6fd8-4bc6-9f97-7681a932b87d}</UniqueIdentifier>
+    </Filter>
     <Filter Include="doc">
       <UniqueIdentifier>{d5868789-2fca-4dd9-9034-4e58b592bebc}</UniqueIdentifier>
     </Filter>
@@ -79,6 +88,24 @@
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="Makefile" />
+    <None Include="etc\boost\build.sh">
+      <Filter>etc\boost</Filter>
+    </None>
+    <None Include="etc\boost\.gitignore">
+      <Filter>etc\boost</Filter>
+    </None>
+    <None Include="etc\boost\build.bat">
+      <Filter>etc\boost</Filter>
+    </None>
+    <None Include="etc\mysql\build.bat">
+      <Filter>etc\mysql</Filter>
+    </None>
+    <None Include="etc\mysql\build.sh">
+      <Filter>etc\mysql</Filter>
+    </None>
+    <None Include="etc\mysql\.gitignore">
+      <Filter>etc\mysql</Filter>
+    </None>
     <None Include="src\ssLib\ssAcceptor.ipp">
       <Filter>src\ssLib</Filter>
     </None>

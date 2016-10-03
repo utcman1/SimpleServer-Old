@@ -70,7 +70,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include=".gitignore" />
     <None Include="src\ssLib\ssAcceptor.ipp">
       <Filter>src\ssLib</Filter>
     </None>

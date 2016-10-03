@@ -36,7 +36,6 @@
     <ClInclude Include="src\ssLib\ssUtil.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include=".gitignore" />
     <None Include="src\ssLib\ssAcceptor.ipp" />
     <None Include="src\ssLib\ssConnector.ipp" />
     <None Include="src\ssLib\ssSession.ipp" />
