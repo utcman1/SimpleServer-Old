@@ -39,7 +39,7 @@ protected:
 
 public:
 	ssSessionPool(baIoService& _ioService, const EType _type)
-		: ssSessionPerfCounter(_ioService), m_ioService(_ioService), m_type(_type) {}
+		: ssSessionPerfCounter(_ioService), m_type(_type), m_ioService(_ioService) {}
 
 	bool init(const size_t _poolSize, const size_t _backlogMaxSize);
 	void release();

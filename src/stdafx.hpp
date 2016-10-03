@@ -1,4 +1,6 @@
-﻿#pragma once
+﻿#ifdef _WIN32
+#pragma once
+#endif
 
 #pragma warning(push,1)
 #pragma warning(disable : 4548)
