@@ -1,5 +1,6 @@
 #!/bin/bash
 
+BOOST_ROOT=${LIB_ROOT}/boost_1_61_0
 echo BOOST_ROOT ${BOOST_ROOT}
 
 pushd .

@@ -1,3 +1,4 @@
+set MYSQL_ROOT=%LIB_ROOT%\mysql-cluster-gpl-7.5.3
 echo MYSQL_ROOT %MYSQL_ROOT%
 
 pushd .
@@ -27,3 +28,6 @@ cmake -DWITH_NDBCLUSTER=ON -DWITH_NDB_JAVA=OFF -DWITH_NDB_TEST=ON -DWITH_BOOST=.
 git add .
 git add -u .
 git commit -m " - cmake result"
+
+echo "프로젝트 준비 완료. Visual Studio로 직접 빌드하세요"
+echo "제외 프로젝트 : mysql_client_test_embedded, mysql_embedded, mysqltest_embedded"
