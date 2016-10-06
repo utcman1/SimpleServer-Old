@@ -26,20 +26,18 @@
     <ClInclude Include="src\ssLib.hpp" />
     <ClInclude Include="src\ssImpl\ssEchoClientSessionHandler.hpp" />
     <ClInclude Include="src\ssLib\ssAcceptor.hpp" />
+    <ClInclude Include="src\ssLib\ssAcceptor.ipp.hpp" />
     <ClInclude Include="src\ssLib\ssBuffer.hpp" />
     <ClInclude Include="src\ssLib\ssConnector.hpp" />
+    <ClInclude Include="src\ssLib\ssConnector.ipp.hpp" />
     <ClInclude Include="src\ssLib\ssINonCopyable.hpp" />
     <ClInclude Include="src\ssLib\ssLog.hpp" />
     <ClInclude Include="src\ssLib\ssSession.hpp" />
+    <ClInclude Include="src\ssLib\ssSession.ipp.hpp" />
     <ClInclude Include="src\ssLib\ssSessionPerfCounter.hpp" />
     <ClInclude Include="src\ssLib\ssSessionPool.hpp" />
+    <ClInclude Include="src\ssLib\ssSessionPool.ipp.hpp" />
     <ClInclude Include="src\ssLib\ssUtil.hpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="src\ssLib\ssAcceptor.ipp" />
-    <None Include="src\ssLib\ssConnector.ipp" />
-    <None Include="src\ssLib\ssSession.ipp" />
-    <None Include="src\ssLib\ssSessionPool.ipp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -20,11 +20,11 @@ typedef boost::system::error_code			bsErrorCode;
 #include <ssLib/ssUtil.hpp>
 #include <ssLib/ssBuffer.hpp>
 #include <ssLib/ssSession.hpp>
-#include <ssLib/ssSession.ipp>
+#include <ssLib/ssSession.ipp.hpp>
 #include <ssLib/ssSessionPerfCounter.hpp>
 #include <ssLib/ssSessionPool.hpp>
-#include <ssLib/ssSessionPool.ipp>
+#include <ssLib/ssSessionPool.ipp.hpp>
 #include <ssLib/ssAcceptor.hpp>
-#include <ssLib/ssAcceptor.ipp>
+#include <ssLib/ssAcceptor.ipp.hpp>
 #include <ssLib/ssConnector.hpp>
-#include <ssLib/ssConnector.ipp>
+#include <ssLib/ssConnector.ipp.hpp>

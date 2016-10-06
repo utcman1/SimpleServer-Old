@@ -60,10 +60,16 @@
     <ClInclude Include="src\ssLib\ssAcceptor.hpp">
       <Filter>src\ssLib</Filter>
     </ClInclude>
+    <ClInclude Include="src\ssLib\ssAcceptor.ipp.hpp">
+      <Filter>src\ssLib</Filter>
+    </ClInclude>
     <ClInclude Include="src\ssLib\ssBuffer.hpp">
       <Filter>src\ssLib</Filter>
     </ClInclude>
     <ClInclude Include="src\ssLib\ssConnector.hpp">
+      <Filter>src\ssLib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ssLib\ssConnector.ipp.hpp">
       <Filter>src\ssLib</Filter>
     </ClInclude>
     <ClInclude Include="src\ssLib\ssINonCopyable.hpp">
@@ -75,10 +81,16 @@
     <ClInclude Include="src\ssLib\ssSession.hpp">
       <Filter>src\ssLib</Filter>
     </ClInclude>
+    <ClInclude Include="src\ssLib\ssSession.ipp.hpp">
+      <Filter>src\ssLib</Filter>
+    </ClInclude>
     <ClInclude Include="src\ssLib\ssSessionPerfCounter.hpp">
       <Filter>src\ssLib</Filter>
     </ClInclude>
     <ClInclude Include="src\ssLib\ssSessionPool.hpp">
+      <Filter>src\ssLib</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ssLib\ssSessionPool.ipp.hpp">
       <Filter>src\ssLib</Filter>
     </ClInclude>
     <ClInclude Include="src\ssLib\ssUtil.hpp">
@@ -105,18 +117,6 @@
     </None>
     <None Include="lib\mysql\build.sh">
       <Filter>lib\mysql</Filter>
-    </None>
-    <None Include="src\ssLib\ssAcceptor.ipp">
-      <Filter>src\ssLib</Filter>
-    </None>
-    <None Include="src\ssLib\ssConnector.ipp">
-      <Filter>src\ssLib</Filter>
-    </None>
-    <None Include="src\ssLib\ssSession.ipp">
-      <Filter>src\ssLib</Filter>
-    </None>
-    <None Include="src\ssLib\ssSessionPool.ipp">
-      <Filter>src\ssLib</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>
