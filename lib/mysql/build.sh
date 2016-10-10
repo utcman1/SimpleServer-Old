@@ -1,6 +1,5 @@
 #!/bin/bash
 
-MYSQL_ROOT=${LIB_ROOT}/mysql-cluster-gpl-7.5.3
 echo MYSQL_ROOT ${MYSQL_ROOT}
 
 pushd .

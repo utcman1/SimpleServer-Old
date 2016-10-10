@@ -6,6 +6,7 @@
 
 ################################################################################
 # mysql cluster
+MYSQL_ROOT:=$(LIB_ROOT)/mysql-cluster-gpl-7.5.3
 NDB_ROOT:=$(MYSQL_ROOT)/storage/ndb
 
 INCLUDES+=-I$(MYSQL_ROOT)/include
@@ -18,6 +19,7 @@ LIBS+=$(MYSQL_ROOT)/libmysql/libmysqlclient.a
 
 ################################################################################
 # boost
+BOOST_ROOT:=$(LIB_ROOT)/boost_1_62_0
 INCLUDES+=-I$(BOOST_ROOT)
 LDFLAGS+=-L$(BOOST_ROOT)/stage64/lib
 LIBS+=-lboost_log

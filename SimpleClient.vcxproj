@@ -8,7 +8,7 @@
   </PropertyGroup>
   <Import Project="props\consoleBase.props" />
   <ImportGroup Label="PropertySheets">
-    <Import Project="props\boost_1_61_0.props" />
+    <Import Project="props\boost_1_62_0.props" />
     <Import Project="props\mysql-cluster-gpl-7.5.3.props" />
   </ImportGroup>
   <ItemGroup>
