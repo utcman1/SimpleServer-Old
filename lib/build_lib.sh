@@ -9,6 +9,11 @@ export MYSQL_ROOT
 
 
 
+# prepare tools
+yum install gcc gcc-c++ make cmake bison git bzip2 bzip2-devel ncurses-devel -y
+
+
+
 # download and extract boost 1.59
 # 1.59 버전은 mysql 빌드에 필요하다
 if [ ! -f ${BOOST_159}.tar.bz2 ]; then
@@ -25,8 +30,9 @@ rm -rf ${BOOST_LAST}
 tar xvjf ${BOOST_LAST}.tar.bz2 -C ${LIB_ROOT}
 
 # download and extract mysql
-# mysql은 소스 설치를 yum으로 하기 때문에 download는 패스
-# src.rpm을 설치하면 LIB_ROOT 위치에 src.tar.gz 파일이 설치된다.
+if [ ! -f ${MYSQL_ROOT}.tar.gz ]; then
+	rpm -Uvh http://dev.mysql.com/get/Downloads/MySQL-Cluster-7.5/MySQL-Cluster-gpl-7.5.3-1.el7.src.rpm
+fi
 rm -rf ${MYSQL_ROOT}
 tar xvzf ${MYSQL_ROOT}.tar.gz -C ${LIB_ROOT}
 
