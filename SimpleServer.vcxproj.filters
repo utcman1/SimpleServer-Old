@@ -26,6 +26,9 @@
     <Filter Include="lib\mysql">
       <UniqueIdentifier>{94c4eb75-6fd8-4bc6-9f97-7681a932b87d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="props">
+      <UniqueIdentifier>{e3e60a27-4850-4c27-b93c-2023530c1159}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\SimpleServer.cpp">
@@ -100,6 +103,12 @@
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="Makefile" />
+    <None Include="lib\build_lib.bat">
+      <Filter>lib</Filter>
+    </None>
+    <None Include="lib\build_lib.sh">
+      <Filter>lib</Filter>
+    </None>
     <None Include="lib\boost\.gitignore">
       <Filter>lib\boost</Filter>
     </None>
@@ -117,6 +126,15 @@
     </None>
     <None Include="lib\mysql\build.sh">
       <Filter>lib\mysql</Filter>
+    </None>
+    <None Include="props\consoleBase.props">
+      <Filter>props</Filter>
+    </None>
+    <None Include="props\boost_1_62_0.props">
+      <Filter>props</Filter>
+    </None>
+    <None Include="props\mysql-cluster-gpl-7.5.3.props">
+      <Filter>props</Filter>
     </None>
   </ItemGroup>
   <ItemGroup>

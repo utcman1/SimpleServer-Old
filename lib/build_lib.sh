@@ -39,9 +39,9 @@ tar xvzf ${MYSQL_ROOT}.tar.gz -C ${LIB_ROOT}
 
 
 # build boost 1.59
-pushd . > /dev/null
 BOOST_ROOT=${BOOST_159}
 export BOOST_ROOT
+pushd . > /dev/null
 cd boost; ./build.sh
 popd > /dev/null
 
@@ -56,4 +56,3 @@ popd > /dev/null
 pushd . > /dev/null
 cd mysql; ./build.sh
 popd > /dev/null
-

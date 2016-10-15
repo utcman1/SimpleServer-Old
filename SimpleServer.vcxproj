@@ -42,12 +42,17 @@
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="Makefile" />
+    <None Include="lib\build_lib.bat" />
+    <None Include="lib\build_lib.sh" />
     <None Include="lib\boost\.gitignore" />
     <None Include="lib\boost\build.bat" />
     <None Include="lib\boost\build.sh" />
     <None Include="lib\mysql\.gitignore" />
     <None Include="lib\mysql\build.bat" />
     <None Include="lib\mysql\build.sh" />
+    <None Include="props\consoleBase.props" />
+    <None Include="props\boost_1_62_0.props" />
+    <None Include="props\mysql-cluster-gpl-7.5.3.props" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="doc\DONE.txt" />
