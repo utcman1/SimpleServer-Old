@@ -3,23 +3,31 @@
 #endif
 
 #pragma warning(push,1)
-#pragma warning(disable : 4548)
+#pragma warning(disable : 4548) // expression before comma has no effect; expected expression with side-effect
 #include <assert.h>
 #include <algorithm>
 #include <cinttypes>
+#include <cstdint>
 #include <cstdio>
 #include <chrono>
 #include <iostream>
+#include <iterator>
+#include <string>
+#include <unordered_map>
+#include <vector>
 
 
 
 #include <boost/asio.hpp>
 #include <boost/asio/system_timer.hpp>
 #include <boost/log/trivial.hpp>
+#include <boost/property_tree/ptree.hpp>
+#include <boost/property_tree/ini_parser.hpp>
 #pragma warning(pop)
 
 
 
+#pragma warning(disable : 4503) // decorated name length exceeded, name was truncated
 #pragma warning(disable : 4514) // unused inline function
 #pragma warning(disable : 4710) // function not inlined
 #pragma warning(disable : 4714) // function marked as __forceinline not inlined : boost::log

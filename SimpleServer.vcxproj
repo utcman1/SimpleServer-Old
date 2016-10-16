@@ -16,15 +16,15 @@
     <ClCompile Include="src\stdafx.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="src\ssImpl\ssEchoServerSessionHandler.cpp" />
     <ClCompile Include="src\ssLib\ssBuffer.cpp" />
     <ClCompile Include="src\ssLib\ssSessionPerfCounter.cpp" />
     <ClCompile Include="src\ssLib\ssUtil.cpp" />
+    <ClCompile Include="src\ssImpl\ssConfig.cpp" />
+    <ClCompile Include="src\ssImpl\ssEchoServerSessionHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\stdafx.hpp" />
     <ClInclude Include="src\ssLib.hpp" />
-    <ClInclude Include="src\ssImpl\ssEchoServerSessionHandler.hpp" />
     <ClInclude Include="src\ssLib\ssAcceptor.hpp" />
     <ClInclude Include="src\ssLib\ssAcceptor.ipp.hpp" />
     <ClInclude Include="src\ssLib\ssBuffer.hpp" />
@@ -38,10 +38,13 @@
     <ClInclude Include="src\ssLib\ssSessionPool.hpp" />
     <ClInclude Include="src\ssLib\ssSessionPool.ipp.hpp" />
     <ClInclude Include="src\ssLib\ssUtil.hpp" />
+    <ClInclude Include="src\ssImpl\ssConfig.hpp" />
+    <ClInclude Include="src\ssImpl\ssEchoServerSessionHandler.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="Makefile" />
+    <None Include="SimpleServer.ini" />
     <None Include="lib\build_lib.bat" />
     <None Include="lib\build_lib.sh" />
     <None Include="lib\boost\.gitignore" />

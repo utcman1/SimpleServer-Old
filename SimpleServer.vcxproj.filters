@@ -11,12 +11,6 @@
     <Filter Include="src\ssImpl">
       <UniqueIdentifier>{f13f3567-c5e2-4984-ae81-56db18ac377c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="doc">
-      <UniqueIdentifier>{d5868789-2fca-4dd9-9034-4e58b592bebc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="doc\resource">
-      <UniqueIdentifier>{0957898b-89e6-46df-83a2-67ba9578986e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="lib">
       <UniqueIdentifier>{feba74ad-3d92-487b-932a-93ff5d7805d1}</UniqueIdentifier>
     </Filter>
@@ -29,6 +23,12 @@
     <Filter Include="props">
       <UniqueIdentifier>{e3e60a27-4850-4c27-b93c-2023530c1159}</UniqueIdentifier>
     </Filter>
+    <Filter Include="doc">
+      <UniqueIdentifier>{d5868789-2fca-4dd9-9034-4e58b592bebc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="doc\resource">
+      <UniqueIdentifier>{0957898b-89e6-46df-83a2-67ba9578986e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\SimpleServer.cpp">
@@ -36,9 +36,6 @@
     </ClCompile>
     <ClCompile Include="src\stdafx.cpp">
       <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="src\ssImpl\ssEchoServerSessionHandler.cpp">
-      <Filter>src\ssImpl</Filter>
     </ClCompile>
     <ClCompile Include="src\ssLib\ssBuffer.cpp">
       <Filter>src\ssLib</Filter>
@@ -49,6 +46,12 @@
     <ClCompile Include="src\ssLib\ssUtil.cpp">
       <Filter>src\ssLib</Filter>
     </ClCompile>
+    <ClCompile Include="src\ssImpl\ssConfig.cpp">
+      <Filter>src\ssImpl</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ssImpl\ssEchoServerSessionHandler.cpp">
+      <Filter>src\ssImpl</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\stdafx.hpp">
@@ -56,9 +59,6 @@
     </ClInclude>
     <ClInclude Include="src\ssLib.hpp">
       <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="src\ssImpl\ssEchoServerSessionHandler.hpp">
-      <Filter>src\ssImpl</Filter>
     </ClInclude>
     <ClInclude Include="src\ssLib\ssAcceptor.hpp">
       <Filter>src\ssLib</Filter>
@@ -99,10 +99,17 @@
     <ClInclude Include="src\ssLib\ssUtil.hpp">
       <Filter>src\ssLib</Filter>
     </ClInclude>
+    <ClInclude Include="src\ssImpl\ssConfig.hpp">
+      <Filter>src\ssImpl</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ssImpl\ssEchoServerSessionHandler.hpp">
+      <Filter>src\ssImpl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".gitignore" />
     <None Include="Makefile" />
+    <None Include="SimpleServer.ini" />
     <None Include="lib\build_lib.bat">
       <Filter>lib</Filter>
     </None>

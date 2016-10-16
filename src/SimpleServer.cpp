@@ -1,11 +1,15 @@
 ﻿#include <stdafx.hpp>
 #include <ssLib.hpp>
+#include <ssImpl/ssConfig.hpp>
 #include <ssImpl/ssEchoServerSessionHandler.hpp>
 
 
 
-int main()
+int main(int argc, char* argv[])
 {
+	ssConfig config;
+	config.init("SimpleServer.ini");
+
 	baIoService ioService;
 	ssAcceptor<ssEchoServerSessionHandler> acceptor(ioService);
 	if (!acceptor.init(1, 1))
