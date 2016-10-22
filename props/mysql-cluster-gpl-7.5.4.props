@@ -2,7 +2,7 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ImportGroup Label="PropertySheets" />
   <PropertyGroup Label="UserMacros">
-    <MYSQL_ROOT>$(LIB_ROOT)\mysql-cluster-gpl-7.5.3</MYSQL_ROOT>
+    <MYSQL_ROOT>$(LIB_ROOT)\mysql-cluster-gpl-7.5.4</MYSQL_ROOT>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <IncludePath>$(IncludePath);$(MYSQL_ROOT)\include</IncludePath>

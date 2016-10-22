@@ -9,7 +9,7 @@
   <Import Project="props\consoleBase.props" />
   <ImportGroup Label="PropertySheets">
     <Import Project="props\boost_1_62_0.props" />
-    <Import Project="props\mysql-cluster-gpl-7.5.3.props" />
+    <Import Project="props\mysql-cluster-gpl-7.5.4.props" />
   </ImportGroup>
   <ItemGroup>
     <ClCompile Include="src\SimpleServer.cpp" />

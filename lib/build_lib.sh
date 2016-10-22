@@ -4,7 +4,7 @@ echo LIB_ROOT ${LIB_ROOT}
 
 BOOST_159=${LIB_ROOT}/boost_1_59_0
 BOOST_LAST=${LIB_ROOT}/boost_1_62_0
-MYSQL_ROOT=${LIB_ROOT}/mysql-cluster-gpl-7.5.3
+MYSQL_ROOT=${LIB_ROOT}/mysql-cluster-gpl-7.5.4
 export MYSQL_ROOT
 
 
@@ -31,7 +31,7 @@ tar xvjf ${BOOST_LAST}.tar.bz2 -C ${LIB_ROOT}
 
 # download and extract mysql
 if [ ! -f ${MYSQL_ROOT}.tar.gz ]; then
-	rpm -Uvh http://dev.mysql.com/get/Downloads/MySQL-Cluster-7.5/MySQL-Cluster-gpl-7.5.3-1.el7.src.rpm
+	rpm -Uvh http://dev.mysql.com/get/Downloads/MySQL-Cluster-7.5/mysql-cluster-community-7.5.4-1.el7.src.rpm
 fi
 rm -rf ${MYSQL_ROOT}
 tar xvzf ${MYSQL_ROOT}.tar.gz -C ${LIB_ROOT}

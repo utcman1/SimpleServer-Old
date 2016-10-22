@@ -2,7 +2,7 @@ echo LIB_ROOT %LIB_ROOT%
 
 SET BOOST_159=%LIB_ROOT%\boost_1_59_0
 SET BOOST_LAST=%LIB_ROOT%\boost_1_62_0
-SET MYSQL_ROOT=%LIB_ROOT%\mysql-cluster-gpl-7.5.3
+SET MYSQL_ROOT=%LIB_ROOT%\mysql-cluster-gpl-7.5.4
 
 
 

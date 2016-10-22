@@ -6,7 +6,7 @@
 
 ################################################################################
 # mysql cluster
-MYSQL_ROOT:=$(LIB_ROOT)/mysql-cluster-gpl-7.5.3
+MYSQL_ROOT:=$(LIB_ROOT)/mysql-cluster-gpl-7.5.4
 NDB_ROOT:=$(MYSQL_ROOT)/storage/ndb
 
 INCLUDES+=-I$(MYSQL_ROOT)/include
