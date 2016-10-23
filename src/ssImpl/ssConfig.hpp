@@ -1,27 +1,33 @@
 ﻿class ssConfig
 {
+	typedef std::size_t size_t;
 	typedef std::string string;
 	template<typename K, typename V> using map = std::unordered_map<K, V>;
 	template<typename T> using vector = std::vector<T>;
 
 public:
-
 	///////////////////////////////////////////////////////////////////////////
 	// Base
 	struct Base
 	{
 		enum Type
 		{
-			UNKNOWN,
+			INVALID,
 			SERVER,
-			CLIENT
+			CLIENT,
+			MAX = CLIENT
 		};
 
-		Type		type;
-		int			nodeId;
+		static const char* const TypeStr[];
 
-		static string toString(const Type& _type);
-		string toString() const;
+		int			nodeId			= -1;
+		Type		type			= INVALID;
+
+		static string toString(const Type& _type) noexcept { return TypeStr[_type]; }
+		static Type fromString(const string& _str) noexcept;
+		Base() = default;
+		Base(const Base& _default) = default;
+		void parseFrom(const string& _conf, const string& _keyPrefix) noexcept(false);
 	};
 
 
@@ -39,7 +45,9 @@ public:
 		string		serverIp		= "0.0.0.0";
 		uint16_t	serverPort		= 10000;
 
-		void parseFrom(const string& _conf, const string& _keyPrefix);
+		Server() = default;
+		Server(const Server& _default) = default;
+		void parseFrom(const string& _conf, const string& _keyPrefix) noexcept(false);
 	};
 
 
@@ -55,46 +63,34 @@ public:
 		uint16_t	localPortBegin	= 0;
 		uint16_t	localPortEnd	= 0;
 
-		void parseFrom(const string& _conf, const string& _keyPrefix);
+		Client() = default;
+		Client(const Client& _default) = default;
+		void parseFrom(const string& _conf, const string& _keyPrefix) noexcept(false);
 	};
 
 
 
 	///////////////////////////////////////////////////////////////////////////
 	// ssConfig
-	string configFileName;
-	int nodeId;
+	string m_configFileName;
+	int m_nodeId;
 
-	vector<int> serverList;
-	vector<int> clientList;
-	Server serverDefault;
-	Client clientDefault;
-	map<int, Server> serverMap;
-	map<int, Client> clientMap;
+	Server m_defaultServer;
+	Client m_defaultClient;
+	vector<int> m_nodeList;
+	map<int, Base*> m_nodeMap;
 
 
 
 private:
-	static void parseVector(
-		vector<int>& _outVec,
-		const string& _conf, const string& _key);
-
-	static void parseServerMap(
-		map<int, Server>& _serverMap,
-		const string& _conf, const vector<int>& _serverList,
-		const Server& _serverDefault);
-
-	static void parseClientMap(
-		map<int, Client>& _clientMap,
-		const string& _conf, const vector<int>& _clientList,
-		const Client& _clientDefault);
-
-	bool parseCnfFile();
-	bool parseCmdArg(const int _ac, char* const _av[]);
+	bool parseCmdArg(const int _ac, char* const _av[]) noexcept;
+	void parseNodeList() noexcept(false);						// throw parse exception
+	void parseNodeMap() noexcept(false);						// throw parse exception
+	bool parseCnfFile() noexcept;
 
 
 
 public:
-	bool init(const int _ac, char* const _av[]);
-	const Base& getConf() const;
+	bool init(const int _ac, char* const _av[]) noexcept;
+	const Base& getConf() const noexcept;
 };

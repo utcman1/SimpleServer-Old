@@ -25,6 +25,7 @@ LDFLAGS+=-L$(BOOST_ROOT)/stage64/lib
 LIBS+=-lboost_log
 LIBS+=-lboost_thread
 LIBS+=-lboost_system
+LIBS+=-lboost_program_options
 
 
 
@@ -42,16 +43,12 @@ CXXFLAGS:=-c -std=c++11 -O3 -fno-omit-frame-pointer $(WFLAGS) $(DFLAGS) $(INCLUD
 VPATH=src:src/ssLib:src/ssImpl
 CPPS=$(wildcard src/stdafx.cpp src/ssLib/*.cpp src/ssImpl/*.cpp)
 OBJS=$(addprefix obj/, $(notdir $(CPPS:.cpp=.o)))
-EXEC=SimpleServer SimpleClient
+EXEC=SimpleServer
 
 
 all: $(EXEC)
 
 SimpleServer: Makefile src/stdafx.hpp.gch $(OBJS) obj/SimpleServer.o
-	@echo "[Link] $@"
-	@g++ -o $@ $(OBJS) obj/$@.o $(LDFLAGS) $(LIBS)
-
-SimpleClient: Makefile src/stdafx.hpp.gch $(OBJS) obj/SimpleClient.o
 	@echo "[Link] $@"
 	@g++ -o $@ $(OBJS) obj/$@.o $(LDFLAGS) $(LIBS)
 

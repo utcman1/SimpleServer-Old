@@ -8,20 +8,30 @@ using namespace boost::program_options;
 
 ///////////////////////////////////////////////////////////////////////////////
 // Base
-string ssConfig::Base::toString(const Type& _type)
+const char* const ssConfig::Base::TypeStr[] = {"INVALID", "SERVER", "CLIENT"};
+
+ssConfig::Base::Type ssConfig::Base::fromString(const string& _str) noexcept
 {
-	switch (_type)
+	for (int i = 0; MAX >= i; ++i)
 	{
-	default:
-	case Base::UNKNOWN:	return "UNKNOWN";
-	case Base::SERVER:	return "SERVER";
-	case Base::CLIENT:	return "CLIENT";
+		if (0 == _str.compare(TypeStr[i]))
+			return static_cast<Type>(i);
 	}
+
+	return INVALID;
 }
 
-string ssConfig::Base::toString() const
+void ssConfig::Base::parseFrom(const string& _conf, const string& _keyPrefix) noexcept(false)
 {
-	return Base::toString(this->type) + "_" + to_string(nodeId);
+	string strValue;
+	options_description desc;
+	variables_map vm;
+	desc.add_options()
+		((_keyPrefix + "TYPE").c_str(), value(&strValue)->required(), "");
+	store(parse_config_file<char>(_conf.c_str(), desc, true), vm);
+	notify(vm);
+
+	type = Base::fromString(strValue);
 }
 
 
@@ -29,15 +39,17 @@ string ssConfig::Base::toString() const
 #define OPTION_ENTRY(k, v) ((_keyPrefix + k).c_str(), value(&(v)), "")
 ///////////////////////////////////////////////////////////////////////////////
 // Server
-void ssConfig::Server::parseFrom(const string& _conf, const string& _keyPrefix)
+void ssConfig::Server::parseFrom(const string& _conf, const string& _keyPrefix) noexcept(false)
 {
+	Base::parseFrom(_conf, _keyPrefix);
+
 	options_description desc;
 	variables_map vm;
 	desc.add_options()
-		OPTION_ENTRY("POOL_SIZE",		this->poolSize)
-		OPTION_ENTRY("BACKLOG_MAX_SIZE",this->backlogMaxSize)
-		OPTION_ENTRY("SERVER_IP",		this->serverIp)
-		OPTION_ENTRY("SERVER_PORT",		this->serverPort);
+		OPTION_ENTRY("POOL_SIZE",		poolSize)
+		OPTION_ENTRY("BACKLOG_MAX_SIZE",backlogMaxSize)
+		OPTION_ENTRY("SERVER_IP",		serverIp)
+		OPTION_ENTRY("SERVER_PORT",		serverPort);
 	store(parse_config_file<char>(_conf.c_str(), desc, true), vm);
 	notify(vm);
 }
@@ -46,16 +58,16 @@ void ssConfig::Server::parseFrom(const string& _conf, const string& _keyPrefix)
 
 ///////////////////////////////////////////////////////////////////////////////
 // Client
-void ssConfig::Client::parseFrom(const string& _conf, const string& _keyPrefix)
+void ssConfig::Client::parseFrom(const string& _conf, const string& _keyPrefix) noexcept(false)
 {
 	Server::parseFrom(_conf, _keyPrefix);
 
 	options_description desc;
 	variables_map vm;
 	desc.add_options()
-		OPTION_ENTRY("LOCAL_IP",		this->localIp)
-		OPTION_ENTRY("LOCAL_PORT_BEGIN",this->localPortBegin)
-		OPTION_ENTRY("LOCAL_PORT_END",	this->localPortEnd);
+		OPTION_ENTRY("LOCAL_IP",		localIp)
+		OPTION_ENTRY("LOCAL_PORT_BEGIN",localPortBegin)
+		OPTION_ENTRY("LOCAL_PORT_END",	localPortEnd);
 	store(parse_config_file<char>(_conf.c_str(), desc, true), vm);
 	notify(vm);
 }
@@ -65,99 +77,25 @@ void ssConfig::Client::parseFrom(const string& _conf, const string& _keyPrefix)
 
 ///////////////////////////////////////////////////////////////////////////////
 // ssConfig
-
-// throw exception on fail
-void ssConfig::parseVector(
-	vector<int>& _outVec,
-	const string& _conf, const string& _key)
+bool ssConfig::parseCmdArg(const int _ac, char* const _av[]) noexcept
 {
-	string strValue;
-	options_description desc;
-	variables_map vm;
-	desc.add_options()
-		(_key.c_str(), value(&strValue), "");
-	store(parse_config_file<char>(_conf.c_str(), desc, true), vm);
-	notify(vm);
-
-	istringstream is(strValue);
-	_outVec.assign(
-		istream_iterator<int>(is),
-		istream_iterator<int>());
-}
-
-// throw exception on fail
-void ssConfig::parseServerMap(
-	map<int, Server>& _serverMap,
-	const string& _conf, const vector<int>& _serverList,
-	const Server& _serverDefault)
-{
-	for (int nodeId : _serverList)
+	options_description desc("Allowed options");
+	auto printUsage = [&desc]()
 	{
-		const string keyPrefix = "SERVER_" + to_string(nodeId) + ".";
+		cout << "Usage: SimpleServer {node-id} [options]" << endl;
+		cout << desc;
+	};
 
-		Server server = _serverDefault;
-		server.type = Base::SERVER;
-		server.nodeId = nodeId;
-
-		server.parseFrom(_conf, keyPrefix);
-
-		_serverMap[nodeId] = server;
-	}
-}
-
-// throw exception on fail
-void ssConfig::parseClientMap(
-	map<int, Client>& _clientMap,
-	const string& _conf, const vector<int>& _clientList,
-	const Client& _clientDefault)
-{
-	for (int nodeId : _clientList)
-	{
-		const string keyPrefix = "CLIENT_" + to_string(nodeId) + ".";
-	
-		Client client = _clientDefault;
-		client.type = Base::CLIENT;
-		client.nodeId = nodeId;
-	
-		client.parseFrom(_conf, keyPrefix);
-	
-		_clientMap[nodeId] = client;
-	}
-}
-
-bool ssConfig::parseCnfFile()
-{
 	try
 	{
-		ssConfig::parseVector(this->serverList, this->configFileName, "MAIN.SERVER_LIST");
-		ssConfig::parseVector(this->clientList, this->configFileName, "MAIN.CLIENT_LIST");
-		serverDefault.parseFrom(this->configFileName, "SERVER_DEFAULT.");
-		clientDefault.parseFrom(this->configFileName, "CLIENT_DEFAULT.");
-		ssConfig::parseServerMap(this->serverMap, this->configFileName, this->serverList, this->serverDefault);
-		ssConfig::parseClientMap(this->clientMap, this->configFileName, this->clientList, this->clientDefault);
-
-		return true;
-	}
-	catch (exception& e)
-	{
-		cerr << "  ERROR: " << e.what() << endl;
-		return false;
-	}
-}
-
-bool ssConfig::parseCmdArg(const int _ac, char* const _av[])
-{
-	try
-	{
-		options_description desc("Allowed options");
 		desc.add_options()
 			("help,h",
 				"produce help message")
 			("config-file,f",
-				value(&(this->configFileName))->default_value("SimpleServer.ini"),
+				value(&m_configFileName)->default_value("SimpleServer.ini"),
 				"{string} config file path")
 			("node-id",
-				value(&(this->nodeId))->required(),
+				value(&m_nodeId)->required(),
 				"{number} node id");
 
 		positional_options_description positional;
@@ -165,30 +103,99 @@ bool ssConfig::parseCmdArg(const int _ac, char* const _av[])
 
 		variables_map vm;
 		store(command_line_parser(_ac, _av).options(desc).positional(positional).run(), vm);
-		notify(vm);
 
 		if (vm.count("help"))
 		{
-			cout << "Usage: SimpleServer {node-id} [options]" << endl;
-			cout << desc;
+			printUsage();
 			return false;
+
 		}
 
-		cerr << "config-file:" << this->configFileName << endl;
-		cerr << "node-id:" << this->nodeId << endl;
+		notify(vm);
+		cerr << "config-file:" << m_configFileName << endl;
+		cerr << "node-id:" << m_nodeId << endl;
+		return true;
+	}
+	catch (exception& e)
+	{
+		printUsage();
+		cerr << endl << endl << "[ERROR]: " << e.what() << endl;
+		return false;
+	}
+}
+
+void ssConfig::parseNodeList() noexcept(false) // throw parse exception
+{
+	string strValue;
+	options_description desc;
+	variables_map vm;
+	desc.add_options()
+		("NODE.LIST", value(&strValue), "");
+	store(parse_config_file<char>(m_configFileName.c_str(), desc, true), vm);
+	notify(vm);
+
+	istringstream is(strValue);
+	m_nodeList.assign(
+		istream_iterator<int>(is),
+		istream_iterator<int>());
+}
+
+void ssConfig::parseNodeMap() noexcept(false) // throw parse exception
+{
+	for (const int nodeId : m_nodeList)
+	{
+		const string keyPrefix = "NODE." + to_string(nodeId) + ".";
+		Base base;
+		base.parseFrom(m_configFileName, keyPrefix);
+
+		switch (base.type)
+		{
+		default:
+		case Base::INVALID:
+			assert(false); break;
+
+		case Base::SERVER:
+			{
+				Server* pServer = new Server(m_defaultServer);
+				pServer->nodeId = nodeId;
+				pServer->parseFrom(m_configFileName, keyPrefix);
+				m_nodeMap[nodeId] = pServer;
+				break;
+			}
+
+		case Base::CLIENT:
+			{
+				Client* pClient = new Client(m_defaultClient);
+				pClient->nodeId = nodeId;
+				pClient->parseFrom(m_configFileName, keyPrefix);
+				m_nodeMap[nodeId] = pClient;
+				break;
+			}
+		}
+	}
+}
+
+bool ssConfig::parseCnfFile() noexcept
+{
+	try
+	{
+		m_defaultServer.parseFrom(m_configFileName, "DEFAULT_SERVER.");
+		m_defaultClient.parseFrom(m_configFileName, "DEFAULT_CLIENT.");
+		ssConfig::parseNodeList();
+		ssConfig::parseNodeMap();
 
 		return true;
 	}
 	catch (exception& e)
 	{
-		cerr << "  ERROR: " << e.what() << endl;
+		cerr << "[ERROR]: " << e.what() << endl;
 		return false;
 	}
 }
 
 
 
-bool ssConfig::init(const int _ac, char* const _av[])
+bool ssConfig::init(const int _ac, char* const _av[]) noexcept
 {
 	if (!ssConfig::parseCmdArg(_ac, _av))
 		return false;
@@ -196,19 +203,17 @@ bool ssConfig::init(const int _ac, char* const _av[])
 	if (!ssConfig::parseCnfFile())
 		return false;
 
-	if ((this->serverMap.end() == this->serverMap.find(this->nodeId)) &&
-		(this->clientMap.end() == this->clientMap.find(this->nodeId)))
+	// node id가 잘못된 경우
+	if (m_nodeMap.end() == m_nodeMap.find(m_nodeId))
 	{
-		cerr << "  ERROR: cannot match node-id[" << this->nodeId << "] from config file" << endl;
+		cerr << "[ERROR]: " << "unknown node-id" << endl;
 		return false;
 	}
 
 	return true;
 }
 
-const ssConfig::Base& ssConfig::getConf() const
+const ssConfig::Base& ssConfig::getConf() const noexcept
 {
-	return (this->serverMap.end() != this->serverMap.find(this->nodeId)) ?
-		this->serverMap.at(this->nodeId):
-		this->clientMap.at(this->nodeId);
+	return *(m_nodeMap.at(m_nodeId));
 }

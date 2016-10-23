@@ -49,6 +49,9 @@
     <ClCompile Include="src\ssImpl\ssConfig.cpp">
       <Filter>src\ssImpl</Filter>
     </ClCompile>
+    <ClCompile Include="src\ssImpl\ssEchoClientSessionHandler.cpp">
+      <Filter>src\ssImpl</Filter>
+    </ClCompile>
     <ClCompile Include="src\ssImpl\ssEchoServerSessionHandler.cpp">
       <Filter>src\ssImpl</Filter>
     </ClCompile>
@@ -100,6 +103,9 @@
       <Filter>src\ssLib</Filter>
     </ClInclude>
     <ClInclude Include="src\ssImpl\ssConfig.hpp">
+      <Filter>src\ssImpl</Filter>
+    </ClInclude>
+    <ClInclude Include="src\ssImpl\ssEchoClientSessionHandler.hpp">
       <Filter>src\ssImpl</Filter>
     </ClInclude>
     <ClInclude Include="src\ssImpl\ssEchoServerSessionHandler.hpp">

@@ -4,6 +4,8 @@
 
 #pragma warning(push,1)
 #pragma warning(disable : 4548) // expression before comma has no effect; expected expression with side-effect
+#pragma warning(disable : 4710) // function not inlined
+#pragma warning(disable : 4711) // function selected for inline expansion
 #include <assert.h>
 #include <cinttypes>
 #include <cstdint>
@@ -28,5 +30,6 @@
 #pragma warning(disable : 4503) // decorated name length exceeded, name was truncated
 #pragma warning(disable : 4514) // unused inline function
 #pragma warning(disable : 4710) // function not inlined
+#pragma warning(disable : 4711) // function selected for inline expansion
 #pragma warning(disable : 4714) // function marked as __forceinline not inlined : boost::log
 #pragma warning(disable : 4820) // bytes padding added
