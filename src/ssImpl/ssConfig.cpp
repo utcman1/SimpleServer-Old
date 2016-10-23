@@ -3,119 +3,212 @@
 
 
 
+using namespace std;
+using namespace boost::program_options;
+
 ///////////////////////////////////////////////////////////////////////////////
 // Base
-std::string ssConfig::Base::toString(const Type& _type)
+string ssConfig::Base::toString(const Type& _type)
 {
 	switch (_type)
 	{
-	default:			return "";
+	default:
+	case Base::UNKNOWN:	return "UNKNOWN";
 	case Base::SERVER:	return "SERVER";
 	case Base::CLIENT:	return "CLIENT";
 	}
 }
 
-std::string ssConfig::Base::toString() const
+string ssConfig::Base::toString() const
 {
-	return Base::toString(this->type) + "_" + std::to_string(id);
+	return Base::toString(this->type) + "_" + to_string(nodeId);
 }
 
 
 
+#define OPTION_ENTRY(k, v) ((_keyPrefix + k).c_str(), value(&(v)), "")
 ///////////////////////////////////////////////////////////////////////////////
 // Server
-void ssConfig::Server::readFrom(const bpTree& _pTree, const std::string& _pathPrefix)
+void ssConfig::Server::parseFrom(const string& _conf, const string& _keyPrefix)
 {
-	this->poolSize		 = _pTree.get<size_t>		(_pathPrefix + "POOL_SIZE",			this->poolSize);
-	this->backlogMaxSize = _pTree.get<size_t>		(_pathPrefix + "BACKLOG_MAX_SIZE",	this->backlogMaxSize);
-	this->serverIp		 = _pTree.get<std::string>	(_pathPrefix + "SERVER_IP",			this->serverIp);
-	this->serverPort	 = _pTree.get<uint16_t>		(_pathPrefix + "SERVER_PORT",		this->serverPort);
+	options_description desc;
+	variables_map vm;
+	desc.add_options()
+		OPTION_ENTRY("POOL_SIZE",		this->poolSize)
+		OPTION_ENTRY("BACKLOG_MAX_SIZE",this->backlogMaxSize)
+		OPTION_ENTRY("SERVER_IP",		this->serverIp)
+		OPTION_ENTRY("SERVER_PORT",		this->serverPort);
+	store(parse_config_file<char>(_conf.c_str(), desc, true), vm);
+	notify(vm);
 }
 
 
 
 ///////////////////////////////////////////////////////////////////////////////
 // Client
-void ssConfig::Client::readFrom(const bpTree& _pTree, const std::string& _pathPrefix)
+void ssConfig::Client::parseFrom(const string& _conf, const string& _keyPrefix)
 {
-	Server::readFrom(_pTree, _pathPrefix);
+	Server::parseFrom(_conf, _keyPrefix);
 
-	this->localIp		 = _pTree.get<std::string>	(_pathPrefix + "LOCAL_IP",			this->localIp);
-	this->localPortBegin = _pTree.get<uint16_t>		(_pathPrefix + "LOCAL_PORT_BEGIN",	this->localPortBegin);
-	this->localPortEnd	 = _pTree.get<uint16_t>		(_pathPrefix + "LOCAL_PORT_END",	this->localPortEnd);
+	options_description desc;
+	variables_map vm;
+	desc.add_options()
+		OPTION_ENTRY("LOCAL_IP",		this->localIp)
+		OPTION_ENTRY("LOCAL_PORT_BEGIN",this->localPortBegin)
+		OPTION_ENTRY("LOCAL_PORT_END",	this->localPortEnd);
+	store(parse_config_file<char>(_conf.c_str(), desc, true), vm);
+	notify(vm);
 }
+#undef OPTION_ENTRY
 
 
 
 ///////////////////////////////////////////////////////////////////////////////
 // ssConfig
-void ssConfig::readVector(
-	std::vector<int>& _outVec,
-	const bpTree& _pTree, const std::string& _path)
+
+// throw exception on fail
+void ssConfig::parseVector(
+	vector<int>& _outVec,
+	const string& _conf, const string& _key)
 {
-	const std::string strValue = _pTree.get<std::string>(_path, "");
+	string strValue;
+	options_description desc;
+	variables_map vm;
+	desc.add_options()
+		(_key.c_str(), value(&strValue), "");
+	store(parse_config_file<char>(_conf.c_str(), desc, true), vm);
+	notify(vm);
+
+	istringstream is(strValue);
 	_outVec.assign(
-		std::istream_iterator<int>(std::istringstream(strValue)),
-		std::istream_iterator<int>());
+		istream_iterator<int>(is),
+		istream_iterator<int>());
 }
 
-void ssConfig::readServerMap(
-	std::unordered_map<int, Server>& _serverMap,
-	const std::vector<int> _serverList, const Server& _serverDefault,
-	const bpTree& _pTree)
+// throw exception on fail
+void ssConfig::parseServerMap(
+	map<int, Server>& _serverMap,
+	const string& _conf, const vector<int>& _serverList,
+	const Server& _serverDefault)
 {
-	for (int serverId : _serverList)
+	for (int nodeId : _serverList)
 	{
-		const std::string pathPrefix = "SERVER_" + std::to_string(serverId) + ".";
+		const string keyPrefix = "SERVER_" + to_string(nodeId) + ".";
 
 		Server server = _serverDefault;
 		server.type = Base::SERVER;
-		server.id = serverId;
+		server.nodeId = nodeId;
 
-		server.readFrom(_pTree, pathPrefix);
+		server.parseFrom(_conf, keyPrefix);
 
-		_serverMap[serverId] = server;
+		_serverMap[nodeId] = server;
 	}
 }
 
-void ssConfig::readClientMap(
-	std::unordered_map<int, Client>& _clientMap,
-	const std::vector<int> _clientList, const Client& _clientDefault,
-	const bpTree& _pTree)
+// throw exception on fail
+void ssConfig::parseClientMap(
+	map<int, Client>& _clientMap,
+	const string& _conf, const vector<int>& _clientList,
+	const Client& _clientDefault)
 {
-	for (int clientId : _clientList)
+	for (int nodeId : _clientList)
 	{
-		const std::string pathPrefix = "CLIENT_" + std::to_string(clientId) + ".";
-
+		const string keyPrefix = "CLIENT_" + to_string(nodeId) + ".";
+	
 		Client client = _clientDefault;
 		client.type = Base::CLIENT;
-		client.id = clientId;
-
-		client.readFrom(_pTree, pathPrefix);
-
-		_clientMap[clientId] = client;
+		client.nodeId = nodeId;
+	
+		client.parseFrom(_conf, keyPrefix);
+	
+		_clientMap[nodeId] = client;
 	}
 }
 
-void ssConfig::readFrom(const bpTree& _pTree)
+bool ssConfig::parseCnfFile()
 {
-	ssConfig::readVector(this->serverList, _pTree, "MAIN.SERVER_LIST");
-	ssConfig::readVector(this->clientList, _pTree, "MAIN.CLIENT_LIST");
-	serverDefault.readFrom(_pTree, "SERVER_DEFAULT.");
-	clientDefault.readFrom(_pTree, "CLIENT_DEFAULT.");
+	try
+	{
+		ssConfig::parseVector(this->serverList, this->configFileName, "MAIN.SERVER_LIST");
+		ssConfig::parseVector(this->clientList, this->configFileName, "MAIN.CLIENT_LIST");
+		serverDefault.parseFrom(this->configFileName, "SERVER_DEFAULT.");
+		clientDefault.parseFrom(this->configFileName, "CLIENT_DEFAULT.");
+		ssConfig::parseServerMap(this->serverMap, this->configFileName, this->serverList, this->serverDefault);
+		ssConfig::parseClientMap(this->clientMap, this->configFileName, this->clientList, this->clientDefault);
 
-	ssConfig::readServerMap(this->serverMap, this->serverList, this->serverDefault, _pTree);
-	ssConfig::readClientMap(this->clientMap, this->clientList, this->clientDefault, _pTree);
+		return true;
+	}
+	catch (exception& e)
+	{
+		cerr << "  ERROR: " << e.what() << endl;
+		return false;
+	}
+}
+
+bool ssConfig::parseCmdArg(const int _ac, char* const _av[])
+{
+	try
+	{
+		options_description desc("Allowed options");
+		desc.add_options()
+			("help,h",
+				"produce help message")
+			("config-file,f",
+				value(&(this->configFileName))->default_value("SimpleServer.ini"),
+				"{string} config file path")
+			("node-id",
+				value(&(this->nodeId))->required(),
+				"{number} node id");
+
+		positional_options_description positional;
+		positional.add("node-id", 1);
+
+		variables_map vm;
+		store(command_line_parser(_ac, _av).options(desc).positional(positional).run(), vm);
+		notify(vm);
+
+		if (vm.count("help"))
+		{
+			cout << "Usage: SimpleServer {node-id} [options]" << endl;
+			cout << desc;
+			return false;
+		}
+
+		cerr << "config-file:" << this->configFileName << endl;
+		cerr << "node-id:" << this->nodeId << endl;
+
+		return true;
+	}
+	catch (exception& e)
+	{
+		cerr << "  ERROR: " << e.what() << endl;
+		return false;
+	}
 }
 
 
 
-bool ssConfig::init(const std::string& _configFileName)
+bool ssConfig::init(const int _ac, char* const _av[])
 {
-	bpTree pTree;
-	boost::property_tree::ini_parser::read_ini(_configFileName, pTree);
+	if (!ssConfig::parseCmdArg(_ac, _av))
+		return false;
 
-	readFrom(pTree);
+	if (!ssConfig::parseCnfFile())
+		return false;
+
+	if ((this->serverMap.end() == this->serverMap.find(this->nodeId)) &&
+		(this->clientMap.end() == this->clientMap.find(this->nodeId)))
+	{
+		cerr << "  ERROR: cannot match node-id[" << this->nodeId << "] from config file" << endl;
+		return false;
+	}
 
 	return true;
+}
+
+const ssConfig::Base& ssConfig::getConf() const
+{
+	return (this->serverMap.end() != this->serverMap.find(this->nodeId)) ?
+		this->serverMap.at(this->nodeId):
+		this->clientMap.at(this->nodeId);
 }

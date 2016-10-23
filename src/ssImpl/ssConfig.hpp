@@ -1,9 +1,10 @@
 ﻿class ssConfig
 {
+	typedef std::string string;
+	template<typename K, typename V> using map = std::unordered_map<K, V>;
+	template<typename T> using vector = std::vector<T>;
+
 public:
-	typedef boost::property_tree::ptree bpTree;
-
-
 
 	///////////////////////////////////////////////////////////////////////////
 	// Base
@@ -11,17 +12,16 @@ public:
 	{
 		enum Type
 		{
+			UNKNOWN,
 			SERVER,
 			CLIENT
 		};
 
 		Type		type;
-		int			id;
+		int			nodeId;
 
-	private:
-		friend ssConfig;
-		static std::string toString(const Type& _type);
-		std::string toString() const;
+		static string toString(const Type& _type);
+		string toString() const;
 	};
 
 
@@ -36,12 +36,10 @@ public:
 		size_t		backlogMaxSize	= 1;
 
 		// Acceptor
-		std::string	serverIp		= "0.0.0.0";
+		string		serverIp		= "0.0.0.0";
 		uint16_t	serverPort		= 10000;
 
-	private:
-		friend ssConfig;
-		void readFrom(const bpTree& _pTree, const std::string& _pathPrefix);
+		void parseFrom(const string& _conf, const string& _keyPrefix);
 	};
 
 
@@ -53,47 +51,50 @@ public:
 	{
 		// Connector
 		// 여러개의 ip가 있는 서버에서 테스트 client를 돌리는 경우에만 의미가 있음.
-		std::string	localIp			= "0.0.0.0";
+		string		localIp			= "0.0.0.0";
 		uint16_t	localPortBegin	= 0;
 		uint16_t	localPortEnd	= 0;
 
-	private:
-		friend ssConfig;
-		void readFrom(const bpTree& _pTree, const std::string& _pathPrefix);
+		void parseFrom(const string& _conf, const string& _keyPrefix);
 	};
 
 
 
 	///////////////////////////////////////////////////////////////////////////
 	// ssConfig
-	std::vector<int> serverList;
-	std::vector<int> clientList;
+	string configFileName;
+	int nodeId;
+
+	vector<int> serverList;
+	vector<int> clientList;
 	Server serverDefault;
 	Client clientDefault;
-	std::unordered_map<int, Server> serverMap;
-	std::unordered_map<int, Client> clientMap;
+	map<int, Server> serverMap;
+	map<int, Client> clientMap;
 
 
 
 private:
-	static void readVector(
-		std::vector<int>& _outVec,
-		const bpTree& _pTree, const std::string& _path);
+	static void parseVector(
+		vector<int>& _outVec,
+		const string& _conf, const string& _key);
 
-	static void readServerMap(
-		std::unordered_map<int, Server>& _serverMap,
-		const std::vector<int> _serverList, const Server& _serverDefault,
-		const bpTree& _pTree);
+	static void parseServerMap(
+		map<int, Server>& _serverMap,
+		const string& _conf, const vector<int>& _serverList,
+		const Server& _serverDefault);
 
-	static void readClientMap(
-		std::unordered_map<int, Client>& _clientMap,
-		const std::vector<int> _clientList, const Client& _clientDefault,
-		const bpTree& _pTree);
+	static void parseClientMap(
+		map<int, Client>& _clientMap,
+		const string& _conf, const vector<int>& _clientList,
+		const Client& _clientDefault);
 
-	void readFrom(const bpTree& _pTree);
+	bool parseCnfFile();
+	bool parseCmdArg(const int _ac, char* const _av[]);
 
 
 
 public:
-	bool init(const std::string& _configFileName);
+	bool init(const int _ac, char* const _av[]);
+	const Base& getConf() const;
 };

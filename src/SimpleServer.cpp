@@ -7,9 +7,10 @@
 
 int main(int argc, char* argv[])
 {
-	ssConfig config;
-	config.init("SimpleServer.ini");
-
+	ssConfig cnf;
+	if (!cnf.init(argc, argv))
+		return -1;
+/*
 	baIoService ioService;
 	ssAcceptor<ssEchoServerSessionHandler> acceptor(ioService);
 	if (!acceptor.init(1, 1))
@@ -21,6 +22,6 @@ int main(int argc, char* argv[])
 	acceptor.accept(baEndpoint(baAddr::from_string("127.0.0.1"), 10000));
 
 	ioService.run();
-
+*/
     return 0;
 }

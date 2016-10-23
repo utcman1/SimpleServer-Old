@@ -5,7 +5,6 @@
 #pragma warning(push,1)
 #pragma warning(disable : 4548) // expression before comma has no effect; expected expression with side-effect
 #include <assert.h>
-#include <algorithm>
 #include <cinttypes>
 #include <cstdint>
 #include <cstdio>
@@ -21,8 +20,7 @@
 #include <boost/asio.hpp>
 #include <boost/asio/system_timer.hpp>
 #include <boost/log/trivial.hpp>
-#include <boost/property_tree/ptree.hpp>
-#include <boost/property_tree/ini_parser.hpp>
+#include <boost/program_options.hpp>
 #pragma warning(pop)
 
 
