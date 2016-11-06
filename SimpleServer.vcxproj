@@ -47,6 +47,7 @@
     <None Include=".gitignore" />
     <None Include="Makefile" />
     <None Include="SimpleServer.ini" />
+    <None Include="test.sh" />
     <None Include="lib\build_lib.bat" />
     <None Include="lib\build_lib.sh" />
     <None Include="lib\boost\.gitignore" />

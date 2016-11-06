@@ -116,6 +116,7 @@
     <None Include=".gitignore" />
     <None Include="Makefile" />
     <None Include="SimpleServer.ini" />
+    <None Include="test.sh" />
     <None Include="lib\build_lib.bat">
       <Filter>lib</Filter>
     </None>
